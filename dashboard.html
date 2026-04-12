@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autodebet Banking End-to-End Dashboard</title>
+<style>
+:root {
+    --bg: #f4efe4;
+    --bg-2: #efe2c5;
+    --ink: #1f2a30;
+    --muted: #58656c;
+    --panel: rgba(255, 252, 245, 0.88);
+    --panel-strong: #fffdf7;
+    --line: rgba(73, 93, 99, 0.16);
+    --accent: #b85c38;
+    --accent-2: #0d6e6e;
+    --accent-3: #d6a94f;
+    --good: #2a7f62;
+    --warn: #b56b2d;
+    --bad: #af3d3d;
+    --shadow: 0 24px 50px rgba(52, 45, 31, 0.12);
+    --radius-xl: 30px;
+    --radius-lg: 22px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+    --max: 1380px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0;
+    color: var(--ink);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(184, 92, 56, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(13, 110, 110, 0.14), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(214, 169, 79, 0.18), transparent 24%),
+        linear-gradient(155deg, var(--bg) 0%, #f9f5eb 36%, #ecf4f2 100%);
+}
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(31, 42, 48, 0.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31, 42, 48, 0.028) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent 82%);
+}
+a { color: inherit; }
+.page { width: min(calc(100% - 28px), var(--max)); margin: 0 auto; padding: 22px 0 54px; }
+.topbar {
+    position: sticky; top: 14px; z-index: 20; margin-bottom: 18px; padding: 12px;
+    border: 1px solid rgba(73, 93, 99, 0.12); border-radius: 999px;
+    background: rgba(255, 251, 244, 0.82); backdrop-filter: blur(14px); box-shadow: var(--shadow);
+}
+.nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.nav a { padding: 10px 14px; border-radius: 999px; text-decoration: none; color: var(--muted); font-size: 0.92rem; font-weight: 700; }
+.nav a:hover { background: rgba(184, 92, 56, 0.1); color: var(--accent); }
+.hero {
+    position: relative; overflow: hidden; padding: 42px; border-radius: var(--radius-xl);
+    background:
+        linear-gradient(135deg, rgba(255, 248, 236, 0.95), rgba(239, 246, 243, 0.94)),
+        linear-gradient(120deg, rgba(184, 92, 56, 0.08), rgba(13, 110, 110, 0.08));
+    border: 1px solid rgba(73, 93, 99, 0.12); box-shadow: var(--shadow);
+}
+.hero::after {
+    content: ""; position: absolute; right: -70px; top: -70px; width: 260px; height: 260px;
+    border-radius: 50%; background: radial-gradient(circle, rgba(184, 92, 56, 0.18), transparent 68%);
+}
+.eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px;
+    background: rgba(184, 92, 56, 0.12); color: var(--accent); font-size: 0.84rem; font-weight: 800;
+    letter-spacing: 0.08em; text-transform: uppercase;
+}
+h1 { margin: 16px 0 14px; max-width: 860px; font-size: clamp(2.3rem, 5vw, 4.8rem); line-height: 1.02; }
+.hero p { max-width: 900px; margin: 0; color: var(--muted); font-size: 1.05rem; line-height: 1.8; }
+.hero-grid { display: grid; grid-template-columns: 1.35fr 0.85fr; gap: 20px; margin-top: 26px; }
+.metrics,.hero-note,.panel,.table-card,.stack,.timeline-card,.api-card,.topology-card,.phase,.risk-card {
+    border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--panel); box-shadow: var(--shadow);
+}
+.metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; padding: 16px; }
+.metric { padding: 16px; border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.62); border: 1px solid rgba(73, 93, 99, 0.08); }
+.metric strong { display: block; margin-bottom: 8px; color: var(--accent-2); font-size: 1.4rem; }
+.metric span { color: var(--muted); line-height: 1.55; font-size: 0.94rem; }
+.hero-note { padding: 22px; background: linear-gradient(180deg, rgba(13, 110, 110, 0.08), rgba(255, 255, 255, 0.78)); }
+.hero-note h2,.panel h2,.table-card h2,.api-card h2,.topology-card h2 { margin: 0 0 12px; font-size: 1.35rem; }
+.hero-note p,.panel p,.panel li,.table-card p,.table-card li,.api-card p,.api-card li,.topology-card p,.topology-card li,td,th {
+    color: var(--muted); line-height: 1.7;
+}
+.hero-note ul,.panel ul,.table-card ul,.api-card ul,.topology-card ul { margin: 0; padding-left: 20px; }
+.layout { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; margin-top: 20px; }
+.span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-7 { grid-column: span 7; } .span-6 { grid-column: span 6; } .span-5 { grid-column: span 5; } .span-4 { grid-column: span 4; }
+.panel,.table-card,.api-card,.topology-card { padding: 24px; }
+.badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.badge {
+    display: inline-flex; align-items: center; padding: 7px 11px; border-radius: 999px;
+    background: rgba(13, 110, 110, 0.1); color: var(--accent-2); font-size: 0.78rem; font-weight: 800;
+    letter-spacing: 0.05em; text-transform: uppercase;
+}
+.accent { color: var(--accent); font-weight: 800; }
+.grid-2,.grid-3,.grid-4 { display: grid; gap: 14px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.mini-card { padding: 16px; border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.62); border: 1px solid rgba(73, 93, 99, 0.08); }
+.mini-card strong { display: block; margin-bottom: 8px; color: var(--ink); }
+.process-flow { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+.phase { position: relative; padding: 16px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(245, 248, 246, 0.9)); }
+.phase::after {
+    content: "->"; position: absolute; top: 50%; right: -18px; transform: translateY(-50%);
+    color: var(--accent); font-size: 1.35rem; font-weight: 900;
+}
+.phase:last-child::after { display: none; }
+.phase strong { display: block; margin-bottom: 8px; color: var(--accent); }
+.phase span { color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
+.topology { display: grid; grid-template-columns: 1.1fr 0.9fr 1.15fr; gap: 16px; align-items: stretch; margin-top: 18px; }
+.stack { padding: 18px; background: rgba(255, 255, 255, 0.68); border: 1px solid rgba(73, 93, 99, 0.08); border-radius: var(--radius-md); }
+.stack h3 { margin: 0 0 12px; font-size: 1.02rem; }
+.stack ul { margin: 0; padding-left: 18px; }
+.stack li + li { margin-top: 8px; }
+.connector-column { display: grid; gap: 10px; align-content: center; }
+.connector {
+    padding: 12px; border-radius: 14px; text-align: center; font-weight: 800; color: #fff;
+    background: linear-gradient(135deg, var(--accent), #d57f49);
+}
+.connector.alt { background: linear-gradient(135deg, var(--accent-2), #1d9595); }
+table { width: 100%; border-collapse: collapse; margin-top: 14px; overflow: hidden; }
+th,td { padding: 14px 12px; border-bottom: 1px solid rgba(73, 93, 99, 0.09); text-align: left; vertical-align: top; font-size: 0.94rem; }
+th { color: var(--ink); background: rgba(13, 110, 110, 0.06); font-size: 0.86rem; letter-spacing: 0.04em; text-transform: uppercase; }
+code,.mono { font-family: Consolas, "Courier New", monospace; font-size: 0.92em; }
+pre {
+    margin: 14px 0 0; padding: 16px; border-radius: var(--radius-md); overflow-x: auto;
+    background: #1f2a30; color: #f6f4ee; line-height: 1.6;
+}
+.timeline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.timeline-card { position: relative; padding: 18px; background: rgba(255, 255, 255, 0.74); }
+.timeline-card::before {
+    content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+    background: linear-gradient(180deg, var(--accent), var(--accent-3));
+}
+.timeline-card strong { display: block; margin-bottom: 10px; color: var(--accent); }
+.risk-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+.risk-card { padding: 16px; background: rgba(255, 255, 255, 0.72); }
+.risk-card h3 { margin: 0 0 8px; font-size: 1rem; }
+.pill {
+    display: inline-flex; padding: 5px 10px; border-radius: 999px; font-size: 0.76rem; font-weight: 800;
+    letter-spacing: 0.04em; text-transform: uppercase;
+}
+.good { background: rgba(42, 127, 98, 0.14); color: var(--good); }
+.warn { background: rgba(181, 107, 45, 0.14); color: var(--warn); }
+.bad { background: rgba(175, 61, 61, 0.14); color: var(--bad); }
+.footer {
+    margin-top: 20px; padding: 22px 24px; border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, rgba(31, 42, 48, 0.96), rgba(13, 110, 110, 0.88));
+    color: rgba(255, 255, 255, 0.88); box-shadow: var(--shadow);
+}
+.footer p { margin: 0; line-height: 1.8; }
+@media (max-width: 1100px) {
+    .hero-grid,.topology,.grid-4,.timeline,.risk-grid { grid-template-columns: 1fr 1fr; }
+    .process-flow { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .span-8,.span-7,.span-6,.span-5,.span-4 { grid-column: span 12; }
+}
+@media (max-width: 760px) {
+    .page { width: min(calc(100% - 18px), var(--max)); }
+    .hero { padding: 26px 20px; }
+    .hero-grid,.metrics,.grid-2,.grid-3,.grid-4,.timeline,.topology,.risk-grid,.process-flow { grid-template-columns: 1fr; }
+    .phase::after { display: none; }
+    .layout { gap: 14px; }
+    .panel,.table-card,.api-card,.topology-card { padding: 18px; }
+}
+@media print {
+    .topbar { position: static; }
+    body { background: #fff; }
+    .page { width: 100%; padding: 0; }
+    .hero,.panel,.table-card,.api-card,.topology-card,.footer { box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+    <nav style="background:#111; padding:10px;">
+        <a href="index.html" style="color:white; margin-right:15px;">Home</a>
+        <a href="dashboard.html" style="color:white; margin-right:15px;">Dashboard</a>
+        <a href="deck.html" style="color:white; margin-right:15px;">Deck</a>
+        <a href="swimlane.html" style="color:white; margin-right:15px;">Swimlane</a>
+        <a href="brdsrd.html" style="color:white;">BRD & SRD</a>
+    </nav>
+
+<div class="page">
+    <div class="topbar">
+        <nav class="nav">
+            <a href="#ringkasan">Ringkasan</a>
+            <a href="#kanal">Kanal</a>
+            <a href="#flow">Flow E2E</a>
+            <a href="#topologi">Topologi</a>
+            <a href="#api">API</a>
+            <a href="#data">Data Model</a>
+            <a href="#security">Security</a>
+            <a href="#ops">Operasional</a>
+            <a href="#roadmap">Roadmap</a>
+        </nav>
+    </div>
+
+    <section class="hero" id="ringkasan">
+        <div class="eyebrow">Autodebet Banking Architecture Pack</div>
+        <h1>Fitur <span class="accent">Autodebet</span> untuk Mobile Banking, Internet Banking, dan Core Banking</h1>
+        <p>
+            Dokumen ini dirancang sebagai presentasi dan dashboard implementasi end-to-end. Cakupannya meliputi definisi bisnis, alur proses registrasi hingga settlement, peran channel dan core banking, topologi solusi, kebutuhan pengembangan, spesifikasi API, kontrol keamanan, kebutuhan operasional, serta rekomendasi tahapan implementasi agar fitur autodebet dapat dibangun secara scalable, auditable, dan aman.
+        </p>
+
+        <div class="hero-grid">
+            <div class="metrics">
+                <div class="metric">
+                    <strong>3 Layer</strong>
+                    <span>Channel layer, orchestration layer, dan core banking settlement layer.</span>
+                </div>
+                <div class="metric">
+                    <strong>8 Fase</strong>
+                    <span>Registrasi, validasi, penjadwalan, eksekusi, posting, notifikasi, rekonsiliasi, terminasi.</span>
+                </div>
+                <div class="metric">
+                    <strong>2 Mode</strong>
+                    <span>Standing instruction internal bank dan debit mandate ke biller atau merchant eksternal.</span>
+                </div>
+                <div class="metric">
+                    <strong>24x7</strong>
+                    <span>Butuh dukungan scheduler, retry, observability, dan failover.</span>
+                </div>
+            </div>
+
+            <aside class="hero-note">
+                <h2>Definisi Singkat</h2>
+                <p>
+                    Autodebet adalah fasilitas yang memberi otorisasi kepada bank untuk mendebit rekening nasabah secara otomatis berdasarkan <span class="accent">mandate</span> yang disetujui, pada jadwal tertentu atau saat tagihan tersedia, dengan tujuan pembayaran tagihan, cicilan, iuran, top up, transfer berkala, atau kewajiban lain.
+                </p>
+                <ul>
+                    <li><span class="accent">Mobile / Internet Banking</span> berperan untuk registrasi, persetujuan, maintenance, histori, dan notifikasi.</li>
+                    <li><span class="accent">Middleware / API Layer</span> berperan untuk validasi, orkestrasi, scheduler, routing, callback, dan retry.</li>
+                    <li><span class="accent">Core Banking</span> berperan untuk hold atau fund check, posting debit, ledger entry, reversal, fee posting, dan statement.</li>
+                </ul>
+            </aside>
+        </div>
+    </section>
+
+    <div class="layout">
+        <section class="panel span-7" id="kanal">
+            <div class="badge-row">
+                <span class="badge">Business Scope</span>
+                <span class="badge">Customer Journey</span>
+            </div>
+            <h2>Cakupan Fitur per Kanal</h2>
+            <div class="grid-3">
+                <div class="mini-card">
+                    <strong>Mobile Banking</strong>
+                    <p>Registrasi mandate, OTP atau biometric approval, ubah limit, suspend, resume, cancel, histori debit, push notification, dan dispute initiation.</p>
+                </div>
+                <div class="mini-card">
+                    <strong>Internet Banking</strong>
+                    <p>Fungsi setara mobile dengan tambahan tampilan rinci mandate, export histori, approval maker-checker untuk nasabah bisnis, dan dashboard tagihan.</p>
+                </div>
+                <div class="mini-card">
+                    <strong>Core Banking</strong>
+                    <p>Pembentukan standing instruction record, pengecekan saldo, debit account posting, fee posting, exception queue, reversal, EOD reports, dan general ledger impact.</p>
+                </div>
+            </div>
+            <p>
+                Dari sisi produk, autodebet dapat dibagi menjadi beberapa variasi: <span class="accent">fixed amount recurring</span>, <span class="accent">bill-based variable amount</span>, <span class="accent">minimum amount due</span>, <span class="accent">partial debit with retry</span>, dan <span class="accent">event-triggered debit</span>. Masing-masing membutuhkan parameter yang berbeda pada mandate dan scheduler.
+            </p>
+        </section>
+
+        <section class="panel span-5">
+            <div class="badge-row">
+                <span class="badge">Primary Actors</span>
+            </div>
+            <h2>Aktor Utama</h2>
+            <ul>
+                <li>Nasabah pemilik rekening sumber dana.</li>
+                <li>Channel aplikasi mobile banking atau internet banking.</li>
+                <li>Identity &amp; authentication service untuk login, OTP, device binding, dan biometrik.</li>
+                <li>Autodebet orchestration service sebagai pusat business rule.</li>
+                <li>Biller, merchant, loan system, atau host tujuan penagihan.</li>
+                <li>Core banking dan general ledger untuk posting akuntansi.</li>
+                <li>Notification, reconciliation, fraud monitoring, dan customer service tools.</li>
+            </ul>
+        </section>
+
+        <section class="panel span-12" id="flow">
+            <div class="badge-row">
+                <span class="badge">End-to-End Process</span>
+                <span class="badge">Lifecycle</span>
+            </div>
+            <h2>Flow Proses End-to-End Autodebet</h2>
+            <div class="process-flow">
+                <div class="phase">
+                    <strong>1. Discovery</strong>
+                    <span>Nasabah memilih menu autodebet, biller, sumber dana, dan tipe pembayaran.</span>
+                </div>
+                <div class="phase">
+                    <strong>2. Consent</strong>
+                    <span>Nasabah memberikan persetujuan digital dan otentikasi kuat.</span>
+                </div>
+                <div class="phase">
+                    <strong>3. Validation</strong>
+                    <span>Validasi rekening, status CIF, limit, legal terms, dan biller eligibility.</span>
+                </div>
+                <div class="phase">
+                    <strong>4. Mandate Setup</strong>
+                    <span>Mandate disimpan dan jadwal aktif dibentuk pada orchestration atau core.</span>
+                </div>
+                <div class="phase">
+                    <strong>5. Triggering</strong>
+                    <span>Scheduler atau biller callback memicu proses penagihan.</span>
+                </div>
+                <div class="phase">
+                    <strong>6. Debit Posting</strong>
+                    <span>Core banking melakukan balance check, posting debit, fee, dan referensi jurnal.</span>
+                </div>
+                <div class="phase">
+                    <strong>7. Advice</strong>
+                    <span>Status berhasil atau gagal dikirim ke biller, channel, notifikasi, dan histori.</span>
+                </div>
+                <div class="phase">
+                    <strong>8. Reconcile</strong>
+                    <span>Settlement, rekonsiliasi, retry, reversal, dispute, dan pelaporan audit.</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="table-card span-12">
+            <h2>Rincian Flow Operasional per Tahap</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fase</th>
+                        <th>Aktivitas Utama</th>
+                        <th>Kontrol Sistem</th>
+                        <th>Output</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Registrasi</td>
+                        <td>Nasabah memilih biller, rekening sumber, nominal atau rule tagihan, tanggal efektif, dan frekuensi.</td>
+                        <td>Validasi kepemilikan rekening, status rekening aktif, channel entitlement, dan pre-check biller.</td>
+                        <td>Draft mandate.</td>
+                    </tr>
+                    <tr>
+                        <td>Persetujuan</td>
+                        <td>Nasabah menyetujui syarat, consent statement, dan otorisasi transaksi.</td>
+                        <td>OTP/biometric/PIN, device binding, risk scoring, anti-bot, timestamp, consent ID.</td>
+                        <td>Authorized mandate request.</td>
+                    </tr>
+                    <tr>
+                        <td>Pembentukan Mandate</td>
+                        <td>Middleware menyimpan konfigurasi, membentuk jadwal, limit, dan kebijakan retry.</td>
+                        <td>Idempotency, duplicate check, mandate versioning, maker-checker bila diperlukan.</td>
+                        <td>Mandate aktif dengan nomor referensi.</td>
+                    </tr>
+                    <tr>
+                        <td>Trigger Tagihan</td>
+                        <td>Scheduler internal atau biller callback men-submit debit instruction.</td>
+                        <td>Window checking, holiday rule, cutoff rule, sequence number, signature verification.</td>
+                        <td>Execution request.</td>
+                    </tr>
+                    <tr>
+                        <td>Eksekusi Debit</td>
+                        <td>Core banking memeriksa saldo, overdraft policy, hold amount, lalu posting debit.</td>
+                        <td>Atomic transaction, debit lock, account status control, fee calculation, duplicate protection.</td>
+                        <td>Posting result dan journal reference.</td>
+                    </tr>
+                    <tr>
+                        <td>Distribusi Status</td>
+                        <td>Hasil diteruskan ke biller, histori channel, statement, dan notifikasi nasabah.</td>
+                        <td>Reliable queue, callback retry, notification correlation, masking data sensitif.</td>
+                        <td>Success/fail advice.</td>
+                    </tr>
+                    <tr>
+                        <td>Rekonsiliasi &amp; Settlement</td>
+                        <td>Pencocokan transaksi dengan host eksternal, file settlement, dan suspense account.</td>
+                        <td>Dual control, reconciliation batch, mismatch queue, automated alert.</td>
+                        <td>Settled / pending / exception.</td>
+                    </tr>
+                    <tr>
+                        <td>Maintenance</td>
+                        <td>Nasabah dapat suspend, resume, ubah limit, ganti rekening, atau terminasi mandate.</td>
+                        <td>Version control, effective date, immutable audit trail, approval step.</td>
+                        <td>Mandate lifecycle update.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="topology-card span-12" id="topologi">
+            <div class="badge-row">
+                <span class="badge">Solution Topology</span>
+                <span class="badge">Reference Architecture</span>
+            </div>
+            <h2>Topologi Solusi</h2>
+            <p>
+                Arsitektur yang paling aman dan maintainable adalah pola <span class="accent">channel → API gateway → autodebet orchestration → core banking / external partner</span>. Dengan pola ini, channel fokus pada pengalaman nasabah, sementara logika jadwal, retry, callback, audit, dan integrasi partner dipusatkan pada service tersendiri.
+            </p>
+            <div class="topology">
+                <div class="stack">
+                    <h3>1. Channel &amp; Experience Layer</h3>
+                    <ul>
+                        <li>Mobile banking app.</li>
+                        <li>Internet banking portal.</li>
+                        <li>CRM / customer service console.</li>
+                        <li>Notification inbox, push, SMS, email.</li>
+                    </ul>
+                </div>
+                <div class="connector-column">
+                    <div class="connector">API Gateway</div>
+                    <div class="connector alt">IAM / Consent / OTP</div>
+                    <div class="connector">Fraud &amp; Risk Engine</div>
+                </div>
+                <div class="stack">
+                    <h3>2. Business Orchestration Layer</h3>
+                    <ul>
+                        <li>Autodebet mandate service.</li>
+                        <li>Scheduler / job orchestrator.</li>
+                        <li>Billing inquiry adapter.</li>
+                        <li>Retry &amp; exception workflow.</li>
+                        <li>Reconciliation and reporting service.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="topology" style="margin-top:14px;">
+                <div class="stack">
+                    <h3>3. Transaction &amp; Posting Layer</h3>
+                    <ul>
+                        <li>Core banking deposit / CASA module.</li>
+                        <li>Loan system / card system / internal product host.</li>
+                        <li>Ledger / GL / fee engine.</li>
+                        <li>Posting and reversal API.</li>
+                    </ul>
+                </div>
+                <div class="connector-column">
+                    <div class="connector alt">ESB / MQ / Event Bus</div>
+                    <div class="connector">Settlement File Exchange</div>
+                </div>
+                <div class="stack">
+                    <h3>4. External &amp; Control Layer</h3>
+                    <ul>
+                        <li>Biller / merchant / aggregator.</li>
+                        <li>Monitoring, SIEM, log analytics.</li>
+                        <li>Data warehouse / MIS / audit trail.</li>
+                        <li>Dispute and reconciliation operations.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel span-6">
+            <div class="badge-row">
+                <span class="badge">Development Requirements</span>
+            </div>
+            <h2>Kebutuhan Pengembangan Fungsional</h2>
+            <ul>
+                <li>Registrasi mandate baru, termasuk fixed amount dan variable bill amount.</li>
+                <li>Consent management dengan syarat &amp; ketentuan yang terversioning.</li>
+                <li>Update mandate: nominal maksimum, tanggal debet, rekening sumber, suspend/resume, cancel.</li>
+                <li>Scheduler dengan calendar business day, holiday handling, cutoff time, dan retry rules.</li>
+                <li>Biller inquiry dan bill presentment untuk skenario amount variable.</li>
+                <li>Debit posting, fee posting, reversal, dan callback status.</li>
+                <li>Histori transaksi dan histori perubahan mandate.</li>
+                <li>Notifikasi real-time dan reminder sebelum pendebetan bila diwajibkan kebijakan bisnis.</li>
+                <li>Rekonsiliasi, settlement, exception handling, dan manual repair workflow.</li>
+            </ul>
+        </section>
+
+        <section class="panel span-6">
+            <div class="badge-row">
+                <span class="badge">Non Functional</span>
+            </div>
+            <h2>Kebutuhan Non-Fungsional</h2>
+            <ul>
+                <li>Availability tinggi dengan active-active atau active-standby, terutama pada scheduler dan API gateway.</li>
+                <li>Idempotency kuat untuk create mandate, execute debit, callback, dan reversal.</li>
+                <li>Latency rendah untuk operasi channel, serta throughput tinggi untuk batch debit massal.</li>
+                <li>Audit trail immutable untuk compliance dan investigasi dispute.</li>
+                <li>Encryption in transit dan at rest untuk data rekening, CIF, token, dan consent artifact.</li>
+                <li>Observability lengkap: logs, metrics, traces, business counters, dead-letter queue.</li>
+                <li>Backward compatibility API dan versioning saat ada perubahan rule bisnis.</li>
+                <li>Resilience terhadap duplicate message, race condition, clock drift, dan partial outage.</li>
+            </ul>
+        </section>
+
+        <section class="api-card span-12" id="api">
+            <div class="badge-row">
+                <span class="badge">API Catalogue</span>
+                <span class="badge">Open API Style</span>
+            </div>
+            <h2>Kebutuhan Spesifikasi API</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>API</th>
+                        <th>Method</th>
+                        <th>Consumer</th>
+                        <th>Tujuan</th>
+                        <th>Catatan Teknis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="mono">/v1/autodebit/billers</span></td>
+                        <td>GET</td>
+                        <td>Mobile/IB</td>
+                        <td>Mengambil daftar biller dan capability.</td>
+                        <td>Cacheable, filter by category, return maintenance status.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="mono">/v1/autodebit/inquiry</span></td>
+                        <td>POST</td>
+                        <td>Mobile/IB</td>
+                        <td>Cek tagihan atau validasi customer reference.</td>
+                        <td>Support partner adapter, timeout, dan response normalization.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="mono">/v1/autodebit/mandates</span></td>
+                        <td>POST</td>
+                        <td>Mobile/IB</td>
+                        <td>Membuat mandate baru.</td>
+                        <td>Wajib idempotency key, consent token, request signature.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="mono">/v1/autodebit/mandates/{id}</span></td>
+                        <td>GET</td>
+                        <td>Mobile/IB/CS</td>
+                        <td>Detail mandate dan histori status.</td>
+                        <td>Role-based masking dan pagination histori.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="mono">/v1/autodebit/mandates/{id}</span></td>
+                        <td>PATCH</td>
+                        <td>Mobile/IB</td>
+                        <td>Update limit, jadwal, rekening, atau status.</td>
+                        <td>Gunakan version number untuk optimistic locking.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="mono">/v1/autodebit/mandates/{id}/cancel</span></td>
+                        <td>POST</td>
+                        <td>Mobile/IB</td>
+                        <td>Terminasi mandate.</td>
+                        <td>Perlu strong auth dan effective date handling.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="mono">/v1/autodebit/executions</span></td>
+                        <td>POST</td>
+                        <td>Scheduler/Biller</td>
+                        <td>Memicu eksekusi debit.</td>
+                        <td>Harus asynchronous, masuk queue, dan punya execution reference.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="mono">/v1/autodebit/executions/{id}</span></td>
+                        <td>GET</td>
+                        <td>Channel/Biller/Ops</td>
+                        <td>Mengambil status eksekusi.</td>
+                        <td>Status machine harus konsisten dan retriable.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="mono">/v1/autodebit/callbacks/biller</span></td>
+                        <td>POST</td>
+                        <td>Autodebet Service</td>
+                        <td>Kirim hasil ke partner atau biller.</td>
+                        <td>mTLS, HMAC signature, retry with backoff, deduplication.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="mono">/v1/autodebit/reconcile/files</span></td>
+                        <td>POST</td>
+                        <td>Ops/Settlement</td>
+                        <td>Upload hasil rekonsiliasi atau settlement.</td>
+                        <td>Checksum file, dual control, exception bucket.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="api-card span-6">
+            <h2>Header &amp; Konvensi API yang Direkomendasikan</h2>
+            <ul>
+                <li><span class="mono">Authorization: Bearer &lt;token&gt;</span></li>
+                <li><span class="mono">X-Request-Id</span> untuk tracing end-to-end.</li>
+                <li><span class="mono">Idempotency-Key</span> untuk create mandate dan execute debit.</li>
+                <li><span class="mono">X-Channel-Id</span>, <span class="mono">X-Device-Id</span>, <span class="mono">X-Correlation-Id</span>.</li>
+                <li><span class="mono">X-Signature</span> atau JWS untuk integrasi partner kritikal.</li>
+                <li>Response code bisnis dipisahkan dari HTTP code, misalnya <span class="mono">businessCode</span> dan <span class="mono">businessMessage</span>.</li>
+                <li>Semua API harus mendukung schema evolution tanpa mematahkan consumer lama.</li>
+            </ul>
+        </section>
+
+        <section class="api-card span-6">
+            <h2>Status dan Error Code Penting</h2>
+            <div class="grid-2">
+                <div class="mini-card">
+                    <strong>Status Mandate</strong>
+                    <p><span class="mono">DRAFT</span>, <span class="mono">PENDING_AUTH</span>, <span class="mono">ACTIVE</span>, <span class="mono">SUSPENDED</span>, <span class="mono">PENDING_CANCEL</span>, <span class="mono">CANCELLED</span>, <span class="mono">EXPIRED</span>.</p>
+                </div>
+                <div class="mini-card">
+                    <strong>Status Execution</strong>
+                    <p><span class="mono">QUEUED</span>, <span class="mono">IN_PROGRESS</span>, <span class="mono">SUCCESS</span>, <span class="mono">FAILED</span>, <span class="mono">RETRY_SCHEDULED</span>, <span class="mono">REVERSED</span>, <span class="mono">SETTLED</span>.</p>
+                </div>
+            </div>
+            <ul>
+                <li><span class="mono">AD001</span> duplicate mandate.</li>
+                <li><span class="mono">AD002</span> invalid biller reference.</li>
+                <li><span class="mono">AD003</span> insufficient fund.</li>
+                <li><span class="mono">AD004</span> account restricted or dormant.</li>
+                <li><span class="mono">AD005</span> cutoff passed atau holiday rule violation.</li>
+                <li><span class="mono">AD006</span> biller timeout atau callback unavailable.</li>
+                <li><span class="mono">AD007</span> debit already processed.</li>
+            </ul>
+        </section>
+
+        <section class="api-card span-12">
+            <h2>Contoh Payload API</h2>
+            <div class="grid-2">
+                <div>
+<pre><code>POST /v1/autodebit/mandates
+{
+  "customerId": "CIF1029384",
+  "sourceAccountNo": "1234567890",
+  "billerCode": "PLN",
+  "customerReference": "54788912345",
+  "mandateType": "BILL_BASED",
+  "frequency": "MONTHLY",
+  "debitRule": {
+    "amountType": "FULL_BILL",
+    "maxAmount": 2500000,
+    "retryCount": 2,
+    "retryIntervalHours": 12
+  },
+  "schedule": {
+    "dayOfMonth": 5,
+    "executionWindow": "00:30-05:00",
+    "holidayPolicy": "NEXT_BUSINESS_DAY"
+  },
+  "consentToken": "CNT-20260411-001",
+  "channelRef": "MB-AD-998822"
+}</code></pre>
+                </div>
+                <div>
+<pre><code>{
+  "mandateId": "ADM000000123",
+  "status": "ACTIVE",
+  "createdAt": "2026-04-11T15:45:00+07:00",
+  "version": 1,
+  "nextExecutionAt": "2026-05-05T00:30:00+07:00",
+  "businessCode": "00",
+  "businessMessage": "Mandate created successfully"
+}</code></pre>
+<pre><code>POST /v1/autodebit/executions
+{
+  "mandateId": "ADM000000123",
+  "billAmount": 734500,
+  "billRef": "INV-2026-05-PLN-001",
+  "executionDate": "2026-05-05",
+  "requestSource": "SCHEDULER"
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="table-card span-12" id="data">
+            <div class="badge-row">
+                <span class="badge">Data Model</span>
+                <span class="badge">Master &amp; Transaction</span>
+            </div>
+            <h2>Entitas Data Utama</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Entitas</th>
+                        <th>Atribut Kunci</th>
+                        <th>Tujuan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mandate Master</td>
+                        <td>mandate_id, cif_id, source_account, biller_code, customer_reference, type, frequency, status, effective_date, expiry_date, version</td>
+                        <td>Menyimpan konfigurasi utama autodebet.</td>
+                    </tr>
+                    <tr>
+                        <td>Mandate Consent</td>
+                        <td>consent_id, mandate_id, auth_method, auth_time, device_id, ip_address, terms_version</td>
+                        <td>Bukti legal dan audit bahwa nasabah menyetujui pendebetan.</td>
+                    </tr>
+                    <tr>
+                        <td>Execution Schedule</td>
+                        <td>schedule_id, mandate_id, next_run_at, holiday_policy, cutoff_time, retry_policy</td>
+                        <td>Mengelola jadwal dan retry per mandate.</td>
+                    </tr>
+                    <tr>
+                        <td>Execution Transaction</td>
+                        <td>execution_id, mandate_id, bill_ref, amount, execution_status, core_ref, fee_amount, retry_no</td>
+                        <td>Mencatat setiap upaya debit.</td>
+                    </tr>
+                    <tr>
+                        <td>Posting Journal Link</td>
+                        <td>execution_id, debit_journal_ref, fee_journal_ref, reversal_ref, settlement_ref</td>
+                        <td>Menghubungkan transaksi bisnis ke catatan akuntansi.</td>
+                    </tr>
+                    <tr>
+                        <td>Notification Log</td>
+                        <td>notif_id, execution_id, channel, template_id, delivery_status</td>
+                        <td>Pelacakan pengiriman notifikasi ke nasabah.</td>
+                    </tr>
+                    <tr>
+                        <td>Audit Trail</td>
+                        <td>audit_id, object_type, object_id, action, actor, before_json, after_json, ts</td>
+                        <td>Merekam semua perubahan untuk audit, complaint, dan forensik.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="panel span-12" id="security">
+            <div class="badge-row">
+                <span class="badge">Security &amp; Compliance</span>
+                <span class="badge">Control Framework</span>
+            </div>
+            <h2>Kontrol Keamanan dan Kepatuhan yang Wajib Dipertimbangkan</h2>
+            <div class="grid-4">
+                <div class="mini-card">
+                    <strong>Strong Customer Authentication</strong>
+                    <p>Gunakan minimal 2 faktor untuk registrasi, perubahan kritikal, dan cancel mandate.</p>
+                </div>
+                <div class="mini-card">
+                    <strong>Consent Evidence</strong>
+                    <p>Simpan teks persetujuan, timestamp, auth factor, device info, dan terms version.</p>
+                </div>
+                <div class="mini-card">
+                    <strong>Data Protection</strong>
+                    <p>Masking nomor rekening di UI, tokenisasi bila memungkinkan, dan enkripsi data sensitif.</p>
+                </div>
+                <div class="mini-card">
+                    <strong>Fraud Controls</strong>
+                    <p>Deteksi device baru, perubahan perilaku, velocity check, blacklist, dan anomaly scoring.</p>
+                </div>
+            </div>
+            <div class="risk-grid">
+                <div class="risk-card">
+                    <span class="pill bad">Risiko</span>
+                    <h3>Pendebetan Ganda</h3>
+                    <p>Terjadi akibat retry yang tidak idempotent, callback duplikat, atau job overlap.</p>
+                    <p><strong>Mitigasi:</strong> idempotency key, unique execution reference, locking, reconciliation alarm.</p>
+                </div>
+                <div class="risk-card">
+                    <span class="pill warn">Risiko</span>
+                    <h3>Salah Nominal / Salah Rekening</h3>
+                    <p>Berasal dari inquiry yang salah, parameter mapping yang keliru, atau data mandate tidak sinkron.</p>
+                    <p><strong>Mitigasi:</strong> preview confirmation, mandate versioning, maker-checker, validation matrix.</p>
+                </div>
+                <div class="risk-card">
+                    <span class="pill warn">Risiko</span>
+                    <h3>Insufficient Fund</h3>
+                    <p>Menyebabkan gagal bayar dan complaint bila nasabah tidak mendapat notifikasi jelas.</p>
+                    <p><strong>Mitigasi:</strong> reminder, retry policy, partial debit rule, fallback account bila diizinkan.</p>
+                </div>
+                <div class="risk-card">
+                    <span class="pill bad">Risiko</span>
+                    <h3>Consent Tidak Sah</h3>
+                    <p>Dokumen otorisasi tidak tersimpan lengkap sehingga rawan sengketa.</p>
+                    <p><strong>Mitigasi:</strong> legal text archive, digital signature, immutable consent store.</p>
+                </div>
+                <div class="risk-card">
+                    <span class="pill warn">Risiko</span>
+                    <h3>Outage Biller</h3>
+                    <p>Biller atau partner tidak tersedia saat inquiry atau callback.</p>
+                    <p><strong>Mitigasi:</strong> queue, retry backoff, circuit breaker, status pending settlement.</p>
+                </div>
+                <div class="risk-card">
+                    <span class="pill good">Kontrol</span>
+                    <h3>Audit &amp; Pelaporan</h3>
+                    <p>Seluruh perubahan mandate, eksekusi, reversal, dan settlement harus dapat ditelusuri.</p>
+                    <p><strong>Implementasi:</strong> centralized logging, SIEM, report harian, dan evidence repository.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel span-12" id="ops">
+            <div class="badge-row">
+                <span class="badge">Operational Model</span>
+                <span class="badge">Runbook Ready</span>
+            </div>
+            <h2>Kebutuhan Operasional, Monitoring, dan Support</h2>
+            <div class="timeline">
+                <div class="timeline-card">
+                    <strong>1. Pre-Execution Monitoring</strong>
+                    <p>Monitor jumlah job yang akan jatuh tempo, readiness partner, antrian inquiry, dan health scheduler sebelum window debit dimulai.</p>
+                </div>
+                <div class="timeline-card">
+                    <strong>2. Live Execution Control</strong>
+                    <p>Pantau success rate, fail rate, timeout, duplicate prevention, debit throughput per menit, dan rejected postings.</p>
+                </div>
+                <div class="timeline-card">
+                    <strong>3. Reconciliation Window</strong>
+                    <p>Lakukan pencocokan transaksi host, callback, file settlement, suspense posting, dan mismatch aging.</p>
+                </div>
+                <div class="timeline-card">
+                    <strong>4. Customer Support Closure</strong>
+                    <p>Sediakan inquiry screen bagi CS untuk melihat evidence consent, histori mandate, dan detail execution.</p>
+                </div>
+            </div>
+            <div class="grid-3" style="margin-top:14px;">
+                <div class="mini-card">
+                    <strong>Dashboard Operasional</strong>
+                    <p>Mandate active count, due today, success ratio, retry backlog, callback backlog, unresolved exceptions, settlement mismatch.</p>
+                </div>
+                <div class="mini-card">
+                    <strong>Runbook Utama</strong>
+                    <p>Partner outage, retry storm, duplicate suspicion, reversal process, manual requeue, reconciliation mismatch, dan complaint handling.</p>
+                </div>
+                <div class="mini-card">
+                    <strong>SLA Internal</strong>
+                    <p>Response inquiry, debit completion, callback delivery, notifikasi ke nasabah, reversal turnaround, dispute resolution.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel span-6">
+            <div class="badge-row">
+                <span class="badge">Testing Strategy</span>
+            </div>
+            <h2>Pengujian yang Dibutuhkan</h2>
+            <ul>
+                <li>Unit test business rule untuk frekuensi, holiday policy, cutoff, fee, dan retry.</li>
+                <li>Integration test dengan core banking, inquiry host, biller callback, dan notification.</li>
+                <li>Contract test untuk semua API eksternal dan internal adapter.</li>
+                <li>Performance test untuk debit massal pada jam puncak.</li>
+                <li>Failover test scheduler, MQ, dan DB cluster.</li>
+                <li>Security test: authentication bypass, replay attack, signature tampering, privilege escalation.</li>
+                <li>User acceptance test untuk nasabah retail dan korporasi.</li>
+            </ul>
+        </section>
+
+        <section class="panel span-6">
+            <div class="badge-row">
+                <span class="badge">Deployment</span>
+            </div>
+            <h2>Lingkungan dan Deployment yang Direkomendasikan</h2>
+            <ul>
+                <li>Environment minimal: DEV, SIT, UAT, PERF, PROD, dan DR site.</li>
+                <li>Blue-green atau rolling deployment pada orchestration dan API gateway.</li>
+                <li>Scheduler state sebaiknya terpusat dan mendukung failover leadership.</li>
+                <li>Gunakan MQ atau event bus untuk memisahkan trigger debit dari posting sinkron.</li>
+                <li>Database terpisah untuk mandate master dan event log bila volume besar.</li>
+                <li>Backup, retention, dan archive policy wajib mengikuti aturan audit internal.</li>
+            </ul>
+        </section>
+
+        <section class="panel span-12" id="roadmap">
+            <div class="badge-row">
+                <span class="badge">Implementation Roadmap</span>
+                <span class="badge">Phased Delivery</span>
+            </div>
+            <h2>Usulan Tahapan Implementasi</h2>
+            <div class="timeline">
+                <div class="timeline-card">
+                    <strong>Phase 1: MVP</strong>
+                    <p>Fixed recurring debit internal bank, create/cancel mandate, OTP approval, scheduler dasar, debit posting, notifikasi, dan histori sederhana.</p>
+                </div>
+                <div class="timeline-card">
+                    <strong>Phase 2: Enhanced Billing</strong>
+                    <p>Bill inquiry eksternal, variable amount, retry policy, callback partner, reconciliation dashboard, dan customer support tooling.</p>
+                </div>
+                <div class="timeline-card">
+                    <strong>Phase 3: Enterprise Controls</strong>
+                    <p>Maker-checker, bulk registration, corporate internet banking, advanced fraud rule, fee engine, partial debit, dan analytics.</p>
+                </div>
+                <div class="timeline-card">
+                    <strong>Phase 4: Ecosystem Scale</strong>
+                    <p>Open API partner onboarding, self-service biller portal, multi-bank mandate, event streaming, dan predictive collection intelligence.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="footer">
+        <p>
+            Kesimpulan: implementasi autodebet yang baik tidak hanya berupa fitur jadwal debit, tetapi sebuah kapabilitas end-to-end yang memadukan <strong>consent</strong>, <strong>orchestration</strong>, <strong>posting core banking</strong>, <strong>security</strong>, <strong>reconciliation</strong>, dan <strong>customer support traceability</strong>. Jika dibangun sebagai layanan terpisah dengan API yang jelas, fitur ini akan lebih mudah dikembangkan lintas channel, lebih aman diaudit, dan lebih siap diskalakan untuk kebutuhan retail maupun korporasi.
+        </p>
+    </section>
+</div>
+</body>
+</html>
