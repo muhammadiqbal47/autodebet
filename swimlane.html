@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autodebet Detailed Sequence & Swimlane</title>
+<style>
+:root {
+    --bg: #c3ffa9;
+    --ink: #1f2a30;
+    --muted: #5e6a71;
+    --panel: rgba(255,255,255,0.82);
+    --line: rgba(53,72,79,0.14);
+    --accent: #a9502b;
+    --accent-2: #0c6a6a;
+    --accent-3: #d7a548;
+    --soft-1: #fff4ec;
+    --soft-2: #edf8f6;
+    --soft-3: #fff9e9;
+    --shadow: 0 20px 44px rgba(40, 35, 29, 0.11);
+    --radius-xl: 28px;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --max: 1440px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--ink);
+    background:
+        radial-gradient(circle at top left, rgba(169, 80, 43, 0.14), transparent 26%),
+        radial-gradient(circle at top right, rgba(12, 106, 106, 0.12), transparent 24%),
+        linear-gradient(155deg, #f9f6ef 0%, #f2f7f5 52%, #f7f2e7 100%);
+}
+.page { width: min(calc(100% - 28px), var(--max)); margin: 0 auto; padding: 22px 0 48px; }
+.topbar {
+    position: sticky; top: 14px; z-index: 20; margin-bottom: 18px; padding: 12px;
+    border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(12px); box-shadow: var(--shadow);
+}
+.nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.nav a {
+    text-decoration: none; color: var(--muted); font-weight: 700; font-size: 0.92rem;
+    padding: 10px 14px; border-radius: 999px;
+}
+.nav a:hover { background: rgba(169, 80, 43, 0.1); color: var(--accent); }
+.hero,.panel {
+    border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--panel); box-shadow: var(--shadow);
+}
+.hero {
+    padding: 34px;
+    background:
+        linear-gradient(135deg, rgba(184, 245, 195, 0.96), rgba(240,248,246,0.94)),
+        linear-gradient(120deg, rgba(169, 80, 43, 0.05), rgba(12,106,106,0.05));
+}
+.eyebrow {
+    display: inline-flex; padding: 8px 14px; border-radius: 999px; background: rgba(169, 80, 43, 0.11);
+    color: var(--accent); font-size: 0.82rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+}
+h1 { margin: 16px 0 14px; max-width: 100%; font-size: clamp(1.5rem, 3.5vw, 3.2rem); line-height: 1.2;text-align: justify; }
+.hero p,.panel p,.panel li { color: var(--muted); line-height: 1.75; }
+.layout { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; margin-top: 18px; }
+.span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-6 { grid-column: span 6; } .span-4 { grid-column: span 4; }
+.panel { padding: 24px; }
+.badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.badge {
+    display: inline-flex; padding: 7px 11px; border-radius: 999px; background: rgba(12,106,106,0.1);
+    color: var(--accent-2); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;
+}
+.summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 20px; }
+.summary .card {
+    padding: 16px; border-radius: var(--radius-md); border: 1px solid rgba(53,72,79,0.08); background: rgba(255,255,255,0.66);
+}
+.summary strong { display: block; margin-bottom: 8px; color: var(--accent-2); font-size: 1.15rem; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.legend span {
+    display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px;
+    background: rgba(255,255,255,0.72); border: 1px solid var(--line); color: var(--muted); font-size: 0.86rem;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.sequence-board,.lane-board { overflow-x: auto; }
+.sequence { min-width: 1180px; }
+.participants { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; margin-bottom: 14px; }
+.participant {
+    padding: 14px 12px; border-radius: var(--radius-md); text-align: center; font-weight: 800;
+    border: 1px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(244,247,246,0.8));
+}
+.sequence-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; position: relative; }
+.step {
+    grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px;
+    align-items: center; min-height: 72px; position: relative;
+}
+.step-label {
+    position: absolute; left: -4px; top: 6px; transform: translateY(-100%); padding: 4px 10px;
+    border-radius: 999px; background: rgba(169,80,43,0.1); color: var(--accent); font-size: 0.76rem; font-weight: 800;
+}
+.msg {
+    padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: #fff; color: var(--ink);
+    font-size: 0.88rem; line-height: 1.55; box-shadow: 0 8px 18px rgba(0,0,0,0.04);
+}
+.msg.start-1 { grid-column: 1 / 3; } .msg.start-2 { grid-column: 2 / 4; } .msg.start-3 { grid-column: 3 / 5; }
+.msg.start-4 { grid-column: 4 / 6; } .msg.start-5 { grid-column: 5 / 7; } .msg.start-6 { grid-column: 6 / 8; }
+.msg.long-1-4 { grid-column: 1 / 5; } .msg.long-2-5 { grid-column: 2 / 6; } .msg.long-3-6 { grid-column: 3 / 7; } .msg.long-4-7 { grid-column: 4 / 8; }
+.request { background: var(--soft-1); } .decision { background: var(--soft-3); } .system { background: var(--soft-2); } .error { background: #fff0f0; }
+.swimlane { min-width: 1180px; border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; }
+.swim-row { display: grid; grid-template-columns: 220px 1fr; border-bottom: 1px solid var(--line); }
+.swim-row:last-child { border-bottom: 0; }
+.lane-title { padding: 18px; font-weight: 800; border-right: 1px solid var(--line); background: rgba(255,255,255,0.72); }
+.lane-track { display: grid; grid-template-columns: repeat(8, minmax(140px, 1fr)); gap: 12px; padding: 14px; background: rgba(255,255,255,0.46); }
+.lane-cell { min-height: 92px; padding: 12px; border-radius: 12px; border: 1px solid rgba(53,72,79,0.08); background: #fff; }
+.lane-cell strong { display: block; margin-bottom: 8px; color: var(--accent); font-size: 0.92rem; }
+.lane-head { display: grid; grid-template-columns: 220px 1fr; border-bottom: 1px solid var(--line); background: rgba(12,106,106,0.05); }
+.lane-head .blank { border-right: 1px solid var(--line); }
+.lane-head .track-head { display: grid; grid-template-columns: repeat(8, minmax(140px, 1fr)); gap: 12px; padding: 14px; }
+.track-head div { font-size: 0.84rem; font-weight: 800; color: var(--accent-2); }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+ul { margin: 0; padding-left: 20px; }
+pre { margin: 0; padding: 16px; overflow-x: auto; border-radius: 14px; background: #1f2a30; color: #f5f2eb; line-height: 1.6; }
+@media (max-width: 1100px) {
+    .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .span-8,.span-6,.span-4 { grid-column: span 12; }
+    .grid-2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+    .page { width: min(calc(100% - 16px), var(--max)); }
+    .hero { padding: 24px 18px; }
+    .summary { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+    <nav style="background:#111; padding:10px;">
+        <a href="index.html" style="color:white; margin-right:15px;">Home</a>
+        <a href="dashboard.html" style="color:white; margin-right:15px;">Dashboard</a>
+        <a href="swimlane.html" style="color:white; margin-right:15px;">Diagram Sequence</a>
+        <a href="brdsrd.html" style="color:white;">BRD & SRD</a>
+        <a href="deck.html" style="color:white; margin-right:15px;">Executive Summary</a>
+    </nav>
+
+<div class="page">
+    <div class="topbar">
+        <nav class="nav">
+            <a href="#overview">Overview</a>
+            <a href="#sequence-register">Sequence Registrasi</a>
+            <a href="#sequence-execution">Sequence Eksekusi</a>
+            <a href="#swimlane">Diagram Sequence</a>
+            <a href="#notes">Catatan Teknis</a>
+        </nav>
+    </div>
+
+    <section class="hero" id="overview">
+        <div class="eyebrow">Detailed Diagram Pack</div>
+        <h1>Diagram Sequence dan Swimlane Detail untuk Fitur Autodebet</h1>
+        <p>
+            Halaman ini memisahkan fokus pada interaksi antar sistem dan tanggung jawab tiap lane proses. Diagram dibagi menjadi dua skenario utama: <strong>registrasi mandate</strong> dan <strong>eksekusi debit periodik</strong>, lalu diterjemahkan lagi ke dalam swimlane operasional yang menunjukkan siapa melakukan apa, kapan, dan dengan kontrol apa.
+        </p>
+        <div class="summary">
+            <div class="card">
+                <strong>7 Partisipan</strong>
+                <span>Nasabah, Channel, Identity and Access Management (IAM), Autodebet Service, Scheduler, Core Banking, dan Biller atau Notification.</span>
+            </div>
+            <div class="card">
+                <strong>2 Sequence Utama</strong>
+                <span>Mandate registration flow dan debit execution flow.</span>
+            </div>
+            <div class="card">
+                <strong>8 Kolom Swimlane</strong>
+                <span>Mulai dari discovery sampai reconciliation dan closure.</span>
+            </div>
+            <div class="card">
+                <strong>Siap Presentasi</strong>
+                <span>Layout mandiri, visual-friendly, dan mudah dicetak atau diproyeksikan.</span>
+            </div>
+        </div>
+        <div class="legend">
+            <span><i class="dot" style="background:#f0b08f;"></i> Request / interaction</span>
+            <span><i class="dot" style="background:#b8dfd9;"></i> System processing</span>
+            <span><i class="dot" style="background:#f4df9b;"></i> Decision / control point</span>
+            <span><i class="dot" style="background:#f2b7b7;"></i> Error / exception</span>
+        </div>
+    </section>
+
+    <div class="layout">
+        <section class="panel span-12" id="sequence-register">
+            <div class="badge-row">
+                <span class="badge">Sequence 1</span>
+                <span class="badge">Mandate Registration</span>
+            </div>
+            <h2>Sequence Diagram Detail: Registrasi Autodebet</h2>
+            <div class="sequence-board">
+                <div class="sequence">
+                    <div class="participants">
+                        <div class="participant">Nasabah</div>
+                        <div class="participant">Mobile / IB</div>
+                        <div class="participant">IAM / OTP</div>
+                        <div class="participant">Autodebet API</div>
+                        <div class="participant">Biller Adapter</div>
+                        <div class="participant">Core Banking</div>
+                        <div class="participant">Notif Service</div>
+                    </div>
+                    <div class="sequence-grid">
+                        <div class="step">
+                            <div class="step-label">Step 01</div>
+                            <div class="msg request start-1">Nasabah membuka menu autodebet dan memilih biller atau jenis kewajiban.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 02</div>
+                            <div class="msg request start-2">Channel meminta daftar biller, kategori, capability, dan rule registrasi.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 03</div>
+                            <div class="msg system start-4">Autodebet API mengembalikan daftar biller, tipe amount, frekuensi, cutoff, dan requirement consent.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 04</div>
+                            <div class="msg request start-1">Nasabah mengisi rekening sumber, customer reference, tanggal debet, limit maksimum, dan rule retry.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 05</div>
+                            <div class="msg request long-2-5">Channel mengirim inquiry validasi customer reference atau tagihan ke Autodebet API untuk diteruskan ke Biller Adapter.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 06</div>
+                            <div class="msg system start-5">Biller Adapter melakukan customer validation atau bill inquiry ke host biller.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 07</div>
+                            <div class="msg decision long-4-7">Autodebet API menerima hasil inquiry, normalisasi response, cek eligibility, duplicate mandate, dan parameter limit.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 08</div>
+                            <div class="msg request start-2">Channel menampilkan ringkasan mandate, syarat ketentuan, dan consent statement ke nasabah.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 09</div>
+                            <div class="msg request start-2">Channel meminta strong authentication ke IAM: OTP, PIN, device binding, atau biometric challenge.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 10</div>
+                            <div class="msg system start-3">IAM / OTP memverifikasi challenge, menghasilkan auth result dan consent proof reference.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 11</div>
+                            <div class="msg request start-2">Channel submit create mandate dengan idempotency key, consent token, dan channel reference.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 12</div>
+                            <div class="msg system start-4">Autodebet API menyimpan mandate master, consent evidence, next schedule, dan audit trail.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 13</div>
+                            <div class="msg system start-6">Core Banking menerima standing instruction setup atau reference linkage bila dibutuhkan pada host.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 14</div>
+                            <div class="msg system start-6">Notification service mengirim success advice: mandate aktif, next debit date, dan rule pendebetan.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Exception</div>
+                            <div class="msg error long-2-5">Jika inquiry gagal, duplicate ditemukan, auth gagal, atau rekening tidak eligible, proses dihentikan dan channel menerima business code yang sesuai.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel span-12" id="sequence-execution">
+            <div class="badge-row">
+                <span class="badge">Sequence 2</span>
+                <span class="badge">Debit Execution</span>
+            </div>
+            <h2>Sequence Diagram Detail: Eksekusi Pendebetan Berkala</h2>
+            <div class="sequence-board">
+                <div class="sequence">
+                    <div class="participants">
+                        <div class="participant">Scheduler</div>
+                        <div class="participant">Autodebet API</div>
+                        <div class="participant">Biller Adapter</div>
+                        <div class="participant">Risk / Rule</div>
+                        <div class="participant">Core Banking</div>
+                        <div class="participant">Settlement</div>
+                        <div class="participant">Notif / Channel</div>
+                    </div>
+                    <div class="sequence-grid">
+                        <div class="step">
+                            <div class="step-label">Step 01</div>
+                            <div class="msg system start-1">Scheduler memilih mandate due hari ini berdasarkan next_run_at, cutoff, holiday policy, dan status ACTIVE.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 02</div>
+                            <div class="msg system start-2">Autodebet API membuat execution record status QUEUED dan melakukan lock pada mandate.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 03</div>
+                            <div class="msg request start-2">Untuk bill-based mandate, API meminta latest bill inquiry atau bill presentment ke Biller Adapter.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 04</div>
+                            <div class="msg decision long-2-5">Autodebet API mengecek amount rule, max limit, duplicate bill ref, retry count, blacklist, dan anomaly rule.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 05</div>
+                            <div class="msg request start-2">API mengirim debit posting request ke Core Banking dengan execution reference unik.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 06</div>
+                            <div class="msg system start-5">Core Banking melakukan balance check, account status check, fee calculation, lalu atomic debit posting.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 07</div>
+                            <div class="msg system start-5">Jika sukses, Core mengembalikan journal ref, posting time, fee amount, dan booking status.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 08</div>
+                            <div class="msg system start-2">Autodebet API update execution status menjadi SUCCESS atau RETRY_SCHEDULED atau FAILED.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 09</div>
+                            <div class="msg request start-2">API mengirim callback hasil debit ke Biller Adapter atau partner collection host.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 10</div>
+                            <div class="msg system start-6">Settlement atau reconciliation menandai matched, pending, atau mismatch sesuai callback dan file settlement.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Step 11</div>
+                            <div class="msg system start-6">Notification service dan channel history diperbarui: sukses, gagal dana tidak cukup, atau akan retry.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Exception A</div>
+                            <div class="msg error long-2-5">Jika saldo tidak cukup, status menjadi FAILED atau RETRY_SCHEDULED sesuai retry policy dan nasabah diberi notifikasi.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Exception B</div>
+                            <div class="msg error long-3-6">Jika callback biller gagal, transaksi debit tetap tersimpan, masuk pending advice queue, dan dikirim ulang dengan backoff.</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-label">Exception C</div>
+                            <div class="msg error long-4-7">Jika mismatch settlement atau reversal diperlukan, ops melakukan manual review berdasarkan audit trail dan journal reference.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel span-12" id="swimlane">
+            <div class="badge-row">
+                <span class="badge">Swimlane View</span>
+                <span class="badge">Operational Responsibility</span>
+            </div>
+            <h2>Swimlane Detail End-to-End</h2>
+            <div class="lane-board">
+                <div class="swimlane">
+                    <div class="lane-head">
+                        <div class="blank"></div>
+                        <div class="track-head">
+                            <div>1. Discovery</div>
+                            <div>2. Consent</div>
+                            <div>3. Validation</div>
+                            <div>4. Setup</div>
+                            <div>5. Trigger</div>
+                            <div>6. Posting</div>
+                            <div>7. Advice</div>
+                            <div>8. Reconcile</div>
+                        </div>
+                    </div>
+
+                    <div class="swim-row">
+                        <div class="lane-title">Nasabah</div>
+                        <div class="lane-track">
+                            <div class="lane-cell"><strong>Pilih layanan</strong>Memilih biller, rekening sumber, jenis nominal, dan jadwal.</div>
+                            <div class="lane-cell"><strong>Setujui</strong>Membaca ringkasan dan memberi otorisasi OTP atau biometric.</div>
+                            <div class="lane-cell"><strong>Konfirmasi data</strong>Memastikan customer reference dan limit benar.</div>
+                            <div class="lane-cell"><strong>Mandate aktif</strong>Menerima nomor referensi dan next debit date.</div>
+                            <div class="lane-cell"><strong>Menunggu eksekusi</strong>Tidak ada interaksi kecuali reminder.</div>
+                            <div class="lane-cell"><strong>Saldo tersedia</strong>Rekening harus memiliki dana cukup sesuai rule.</div>
+                            <div class="lane-cell"><strong>Terima notifikasi</strong>Menerima hasil sukses, gagal, atau retry.</div>
+                            <div class="lane-cell"><strong>Komplain / dispute</strong>Bila perlu membuka tiket ke CS.</div>
+                        </div>
+                    </div>
+
+                    <div class="swim-row">
+                        <div class="lane-title">Mobile / Internet Banking</div>
+                        <div class="lane-track">
+                            <div class="lane-cell"><strong>Capture input</strong>UI menampung biller, rekening, frekuensi, dan limit.</div>
+                            <div class="lane-cell"><strong>Strong auth</strong>Memicu challenge ke Identity and Access Management (IAM).</div>
+                            <div class="lane-cell"><strong>Submit inquiry</strong>Mengirim validasi ke Autodebet API.</div>
+                            <div class="lane-cell"><strong>Create mandate</strong>Submit data final dengan idempotency key.</div>
+                            <div class="lane-cell"><strong>History ready</strong>Menampilkan mandate aktif dan next schedule.</div>
+                            <div class="lane-cell"><strong>Passive</strong>Tidak memproses posting langsung.</div>
+                            <div class="lane-cell"><strong>Update timeline</strong>Menampilkan hasil pendebetan di histori.</div>
+                            <div class="lane-cell"><strong>Customer self-service</strong>Suspend, resume, ubah, atau cancel mandate.</div>
+                        </div>
+                    </div>
+
+                    <div class="swim-row">
+                        <div class="lane-title">Identity and Access Management / Fraud / Risk</div>
+                        <div class="lane-track">
+                            <div class="lane-cell"><strong>Session check</strong>Memastikan channel session valid.</div>
+                            <div class="lane-cell"><strong>OTP / device check</strong>Validasi faktor otentikasi dan device trust.</div>
+                            <div class="lane-cell"><strong>Risk score</strong>Memeriksa anomaly, velocity, atau blacklist.</div>
+                            <div class="lane-cell"><strong>Consent proof</strong>Menerbitkan auth result dan evidence ref.</div>
+                            <div class="lane-cell"><strong>Rule refresh</strong>Fraud rule aktif untuk window debit.</div>
+                            <div class="lane-cell"><strong>Execution risk check</strong>Screening pada debit tertentu jika dibutuhkan.</div>
+                            <div class="lane-cell"><strong>Alerting</strong>Raise alert bila pola tidak wajar.</div>
+                            <div class="lane-cell"><strong>Evidence</strong>Menyediakan data investigasi.</div>
+                        </div>
+                    </div>
+
+                    <div class="swim-row">
+                        <div class="lane-title">Autodebet Service</div>
+                        <div class="lane-track">
+                            <div class="lane-cell"><strong>Expose catalog</strong>Daftar biller, capability, dan business rule.</div>
+                            <div class="lane-cell"><strong>Hold draft</strong>Mengelola draft mandate sampai auth sukses.</div>
+                            <div class="lane-cell"><strong>Validate</strong>Duplicate check, inquiry orchestration, account entitlement.</div>
+                            <div class="lane-cell"><strong>Persist</strong>Simpan mandate master, schedule, consent, audit trail.</div>
+                            <div class="lane-cell"><strong>Schedule due job</strong>Memilih mandate jatuh tempo dan lock execution.</div>
+                            <div class="lane-cell"><strong>Orchestrate posting</strong>Hit core, update execution state, handle retry.</div>
+                            <div class="lane-cell"><strong>Dispatch callback</strong>Kirim hasil ke biller, channel, dan notification.</div>
+                            <div class="lane-cell"><strong>Reconcile record</strong>Menjaga status settled, pending, atau mismatch.</div>
+                        </div>
+                    </div>
+
+                    <div class="swim-row">
+                        <div class="lane-title">Biller / Partner Host</div>
+                        <div class="lane-track">
+                            <div class="lane-cell"><strong>Provide capability</strong>Menyediakan metadata layanan dan reference rule.</div>
+                            <div class="lane-cell"><strong>-</strong>Tidak selalu terlibat pada consent.</div>
+                            <div class="lane-cell"><strong>Inquiry response</strong>Validasi reference atau mengembalikan nominal tagihan.</div>
+                            <div class="lane-cell"><strong>Mandate linkage</strong>Bila model partner memerlukan registration sinkron.</div>
+                            <div class="lane-cell"><strong>Bill presentment</strong>Menyediakan tagihan saat execution.</div>
+                            <div class="lane-cell"><strong>Receive payment advice</strong>Menerima hasil debit dan referensi pembayaran.</div>
+                            <div class="lane-cell"><strong>Partner ack</strong>Memberi acknowledgement atau status final.</div>
+                            <div class="lane-cell"><strong>Settlement match</strong>Cocokkan advice dengan file settlement.</div>
+                        </div>
+                    </div>
+
+                    <div class="swim-row">
+                        <div class="lane-title">Core Banking / Ledger</div>
+                        <div class="lane-track">
+                            <div class="lane-cell"><strong>Account master</strong>Menyediakan data rekening dan status.</div>
+                            <div class="lane-cell"><strong>-</strong>Tidak terlibat langsung pada consent.</div>
+                            <div class="lane-cell"><strong>Eligibility check</strong>Validasi account status bila perlu.</div>
+                            <div class="lane-cell"><strong>Optional SI link</strong>Simpan standing instruction ref di host.</div>
+                            <div class="lane-cell"><strong>Ready for debit</strong>Menunggu request eksekusi.</div>
+                            <div class="lane-cell"><strong>Atomic posting</strong>Balance check, debit posting, fee, reversal ref.</div>
+                            <div class="lane-cell"><strong>Journal reference</strong>Mengembalikan booking result ke orchestration.</div>
+                            <div class="lane-cell"><strong>Statement / GL</strong>Masuk ledger, statement, dan report EOD.</div>
+                        </div>
+                    </div>
+
+                    <div class="swim-row">
+                        <div class="lane-title">Ops / Reconciliation / CS</div>
+                        <div class="lane-track">
+                            <div class="lane-cell"><strong>Setup readiness</strong>Monitoring catalog dan partner status.</div>
+                            <div class="lane-cell"><strong>Policy oversight</strong>Mengawasi terms dan approval policy.</div>
+                            <div class="lane-cell"><strong>Exception watch</strong>Monitor inquiry failure dan duplicate attempts.</div>
+                            <div class="lane-cell"><strong>Audit readiness</strong>Pastikan evidence tersimpan lengkap.</div>
+                            <div class="lane-cell"><strong>Job monitoring</strong>Melihat due count dan queue backlog.</div>
+                            <div class="lane-cell"><strong>Live monitor</strong>Memantau success rate, fail rate, retry, timeout.</div>
+                            <div class="lane-cell"><strong>Complaint support</strong>CS akses history dan consent evidence.</div>
+                            <div class="lane-cell"><strong>Manual repair</strong>Handle mismatch, requeue, reversal, dispute.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel span-6" id="notes">
+            <div class="badge-row">
+                <span class="badge">Design Notes</span>
+            </div>
+            <h2>Catatan Teknis Penting untuk Membaca Diagram</h2>
+            <ul>
+                <li>Registrasi dan eksekusi sebaiknya dipisahkan sebagai dua domain flow agar monitoring dan troubleshooting lebih mudah.</li>
+                <li>Execution harus bersifat asynchronous walaupun inquiry tertentu mungkin sinkron.</li>
+                <li>Idempotency wajib hadir pada create mandate, execution trigger, callback partner, dan reversal.</li>
+                <li>Mandate versioning penting agar perubahan limit atau rekening sumber tidak merusak histori lama.</li>
+                <li>Callback failure ke biller tidak boleh otomatis dianggap gagal debit bila core posting sudah sukses.</li>
+                <li>Swimlane bisa dijadikan basis penyusunan SOP, RACI Matrix (Responsible, Accountable, Consulted and Informed), BRD, dan sequence API yang lebih teknis.</li>
+            </ul>
+        </section>
+
+        <section class="panel span-6">
+            <div class="badge-row">
+                <span class="badge">Mermaid Seed</span>
+            </div>
+            <h2>Seed Diagram Teks untuk Pengembangan Lanjut</h2>
+<pre>sequenceDiagram
+    participant C as Customer
+    participant CH as Mobile/IB
+    participant IAM as IAM/OTP
+    participant AD as Autodebet API
+    participant BA as Biller Adapter
+    participant CB as Core Banking
+    participant NS as Notification
+
+    C->>CH: Input mandate data
+    CH->>AD: Inquiry / validate reference
+    AD->>BA: Validate biller reference
+    BA-->>AD: Inquiry result
+    CH->>IAM: Strong authentication
+    IAM-->>CH: Auth success
+    CH->>AD: Create mandate
+    AD->>CB: Optional standing instruction link
+    AD-->>NS: Send registration advice</pre>
+        </section>
+    </div>
+</div>
+</body>
+</html>

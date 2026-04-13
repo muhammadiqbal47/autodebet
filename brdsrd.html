@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Template BRD SRD Workshop Requirement - Autodebet BAS</title>
+<style>
+:root {
+    --bg: #f3f6f8;
+    --ink: #1b2d36;
+    --muted: #5a6a73;
+    --navy: #113c5c;
+    --teal: #0f7a75;
+    --gold: #bb9445;
+    --panel: rgba(255,255,255,0.92);
+    --line: rgba(27,45,54,0.12);
+    --shadow: 0 18px 42px rgba(17,60,92,0.11);
+    --radius-xl: 28px;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --max: 1420px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--ink);
+    background:
+        radial-gradient(circle at top left, rgba(15,122,117,0.1), transparent 24%),
+        radial-gradient(circle at top right, rgba(187,148,69,0.12), transparent 24%),
+        linear-gradient(155deg, #f6f8fa 0%, #eef3f6 50%, #f8f5ee 100%);
+}
+.page { width: min(calc(100% - 28px), var(--max)); margin: 0 auto; padding: 22px 0 48px; }
+.topbar {
+    position: sticky; top: 14px; z-index: 20; margin-bottom: 18px; padding: 12px;
+    border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.86);
+    box-shadow: var(--shadow); backdrop-filter: blur(12px);
+}
+.topbar nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.topbar a {
+    text-decoration: none; color: var(--muted); font-weight: 700; font-size: 0.92rem;
+    padding: 10px 14px; border-radius: 999px;
+}
+.topbar a:hover { background: rgba(17,60,92,0.08); color: var(--navy); }
+.hero,.section,.footer {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: var(--panel);
+    box-shadow: var(--shadow);
+}
+.hero {
+    padding: 36px;
+    background:
+        linear-gradient(135deg, rgba(17,60,92,0.96), rgba(15,122,117,0.92)),
+        linear-gradient(120deg, rgba(187,148,69,0.18), transparent);
+    color: #fff;
+}
+.eyebrow {
+    display: inline-flex; padding: 8px 14px; border-radius: 999px;
+    background: rgba(255,255,255,0.12); font-size: 0.82rem; font-weight: 800;
+    letter-spacing: 0.08em; text-transform: uppercase;
+}
+h1 { margin: 16px 0 12px; font-size: clamp(1.5rem, 3.5vw, 3.2rem); line-height: 1.04; }
+.hero p { max-width: 100%; margin: 0; color: rgba(255,255,255,0.88); line-height: 1.8; text-align: justify;}
+.hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 18px; margin-top: 24px; }
+.hero-card {
+    padding: 18px; border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.08);
+}
+.hero-card strong { display: block; margin-bottom: 8px; }
+.layout { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; margin-top: 18px; }
+.span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-6 { grid-column: span 6; } .span-4 { grid-column: span 4; }
+.section { padding: 24px; }
+.badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.badge {
+    display: inline-flex; padding: 7px 11px; border-radius: 999px; background: rgba(15,122,117,0.1);
+    color: var(--teal); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;
+}
+h2 { margin: 0 0 12px; font-size: 1.42rem; color: var(--navy); }
+h3 { margin: 0 0 10px; font-size: 1.02rem; color: var(--navy); }
+p, li, td, th { color: var(--muted); line-height: 1.72; }
+ul { margin: 0; padding-left: 20px; }
+.grid-2,.grid-3,.grid-4 { display: grid; gap: 14px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.card {
+    padding: 16px; border-radius: var(--radius-md); border: 1px solid rgba(27,45,54,0.08);
+    background: rgba(255,255,255,0.7);
+}
+.card strong { display: block; margin-bottom: 8px; color: var(--navy); }
+table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+th, td {
+    padding: 14px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid rgba(27,45,54,0.08);
+}
+th {
+    color: var(--navy); background: rgba(17,60,92,0.05); font-size: 0.84rem;
+    text-transform: uppercase; letter-spacing: 0.04em;
+}
+.fill {
+    min-height: 54px; border-radius: 10px; border: 1px dashed rgba(27,45,54,0.2);
+    background: rgba(17,60,92,0.03); padding: 10px 12px; color: #6e7b82;
+}
+.checklist li { margin-bottom: 8px; }
+.raci {
+    display: inline-flex; min-width: 26px; justify-content: center; padding: 4px 8px; border-radius: 999px;
+    font-size: 0.76rem; font-weight: 800; color: #fff;
+}
+.r { background: #2f7e59; } .a { background: #0f7a75; } .c { background: #bb9445; } .i { background: #6c7b86; }
+.footer { margin-top: 18px; padding: 22px 24px; background: linear-gradient(135deg, rgba(17,60,92,0.96), rgba(15,122,117,0.92)); }
+.footer p { margin: 0; color: rgba(255,255,255,0.86); }
+@media (max-width: 1100px) {
+    .hero-grid,.grid-4 { grid-template-columns: 1fr 1fr; }
+    .span-8,.span-6,.span-4 { grid-column: span 12; }
+}
+@media (max-width: 760px) {
+    .page { width: min(calc(100% - 16px), var(--max)); }
+    .hero { padding: 24px 18px; }
+    .hero-grid,.grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+    <nav style="background:#111; padding:10px;">
+        <a href="index.html" style="color:white; margin-right:15px;">Home</a>
+        <a href="dashboard.html" style="color:white; margin-right:15px;">Dashboard</a>
+        <a href="swimlane.html" style="color:white; margin-right:15px;">Diagram Sequence</a>
+        <a href="brdsrd.html" style="color:white;">BRD & SRD</a>
+        <a href="deck.html" style="color:white; margin-right:15px;">Executive Summary</a>
+    </nav>
+
+<div class="page">
+    <div class="topbar">
+        <nav>
+            <a href="#cover">Tittle</a>
+            <a href="#governance">Governance</a>
+            <a href="#brd">BRD</a>
+            <a href="#srd">SRD</a>
+            <a href="#workshop">Workshop</a>
+            <a href="#raci">RACI</a>
+            <a href="#signoff">Sign-Off</a>
+        </nav>
+    </div>
+
+    <section class="hero" id="cover">
+        <div class="eyebrow">Scope of Work Requirement</div>
+        <h1>BRD / SRD Pengembangan Engine / Aplikasi Autodebet</h1>
+        <p>
+            Scope of Work ini disusun untuk membantu workshop requirement pengembangan fitur autodebet pada <strong>Bank Aceh Syariah</strong>. Struktur dokumen menggabungkan elemen <strong>Business Requirement Document</strong> dan <strong>System Requirement Document</strong> dipakai sebagai bahan diskusi lintas unit bisnis, operasional, risiko, teknologi, dan vendor pengembang.
+        </p>
+        <div class="hero-grid">
+            <div class="hero-card">
+                <strong>Halaman BRD & SRD</strong>
+                <p>ini untuk memastikan adanya keterkaitan yang jelas antara kebutuhan bisnis dan implementasi teknis yang akan dibangun. Keduanya menjadi fondasi utama dalam menjaga keselarasan arah pengembangan, sehingga setiap inisiatif tidak hanya relevan secara strategis, tetapi juga dapat dieksekusi secara tepat oleh tim pengembang.</p>
+            </div>
+            <div class="hero-card">
+                <strong>Tujuan Dokumen</strong>
+                <p>Menyepakati ruang lingkup, rule bisnis, target solusi, kebutuhan integrasi, ownership, control framework, dan daftar keputusan sebelum pengembangan dimulai.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="layout">
+        <section class="section span-12">
+            <div class="badge-row">
+                <span class="badge">Document Control</span>
+                <span class="badge">Template Metadata</span>
+            </div>
+            <h2>Informasi Dokumen</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Isi</th>
+                        <th>Catatan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Nama Dokumen</td>
+                        <td>BRD / SRD Pengembangan Engine / Aplikasi Autodebet</td>
+                        <td>Menggunakan satu dokumen terpadu dalam pengembangan fitur Autodebet.</td>
+                    </tr>
+                    <tr>
+                        <td>Organisasi</td>
+                        <td>Bank Aceh Syariah</td>
+                        <td>Disesuaikan dengan template administrasi dokumen internal BAS.</td>
+                    </tr>
+                    <tr>
+                        <td>Versi</td>
+                        <td><div class="fill">Isi versi dokumen, misal 0.1 Draft Workshop</div></td>
+                        <td>Isi versi dokumen (update).</td>
+                    </tr>
+                    <tr>
+                        <td>Tanggal</td>
+                        <td><div class="fill">Isi tanggal workshop / draft</div></td>
+                        <td>Format yang berlaku internal.</td>
+                    </tr>
+                    <tr>
+                        <td>Disusun Oleh</td>
+                        <td><div class="fill">Nama PM / BA / Tim Penyusun</div></td>
+                        <td>Unit kerja terkait.</td>
+                    </tr>
+                    <tr>
+                        <td>Status Dokumen</td>
+                        <td><div class="fill">Draft / In Review / Rilis</div></td>
+                        <td>Sinkron dengan proses sign-off.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section span-12" id="governance">
+            <div class="badge-row">
+                <span class="badge">Governance Baseline</span>
+                <span class="badge">Known Ownership</span>
+            </div>
+            <h2>Baseline Governance dan Ownership yang Sudah Diketahui</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Area Tanggung Jawab</th>
+                        <th>Unit / Pihak</th>
+                        <th>Catatan Validasi Workshop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Owner Product</td>
+                        <td>Divisi Digitalisasi dan Layanan</td>
+                        <td>Konfirmasi scope product management, target penyelesaian, dan approval atas perubahan requirement.</td>
+                    </tr>
+                    <tr>
+                        <td>Owner Engine</td>
+                        <td>Divisi Teknologi Informasi dan/atau vendor pengembang</td>
+                        <td>Perlu dipastikan model ownership final antara internal IT dan vendor.</td>
+                    </tr>
+                    <tr>
+                        <td>Owner Partner Onboarding</td>
+                        <td>Vendor pengembang</td>
+                        <td>Perlu klarifikasi apakah tetap dipimpin vendor atau ada sponsor internal bisnis / TI.</td>
+                    </tr>
+                    <tr>
+                        <td>Owner Operasional Harian</td>
+                        <td>Divisi Operasional dan Akuntansi</td>
+                        <td>Harus mencakup monitoring, settlement, dan manual handling.</td>
+                    </tr>
+                    <tr>
+                        <td>Owner Rekonsiliasi</td>
+                        <td>Divisi Operasional dan Akuntansi</td>
+                        <td>Pastikan boundary dengan tim settlement dan dispute.</td>
+                    </tr>
+                    <tr>
+                        <td>Owner Complaint Handling</td>
+                        <td>Divisi Digitalisasi dan Layanan (Bidang Pengaduan Nasabah)</td>
+                        <td>Perlu definisi SLA dan kebutuhan akses ke histori mandate / execution.</td>
+                    </tr>
+                    <tr>
+                        <td>Owner Fraud / Risk Monitoring</td>
+                        <td>Divisi Manajemen Risiko</td>
+                        <td>Pastikan kebutuhan alert, threshold, dan reporting didefinisikan.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section span-8" id="brd">
+            <div class="badge-row">
+                <span class="badge">BRD Section</span>
+                <span class="badge">Business Requirement</span>
+            </div>
+            <h2>Bagian BRD Scope of Work</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <strong>1. Latar Belakang dan Problem Statement</strong>
+                    <div class="fill">Jelaskan masalah bisnis saat ini, gap layanan, kebutuhan nasabah, dan alasan strategis pengembangan autodebet.</div>
+                </div>
+                <div class="card">
+                    <strong>2. Tujuan Bisnis</strong>
+                    <div class="fill">Contoh: peningkatan recurring transaction, pengurangan missed payment, peningkatan customer convenience, dan penguatan collection process.</div>
+                </div>
+                <div class="card">
+                    <strong>3. Lingkup MVP</strong>
+                    <div class="fill">Isi use case awal yang disetujui, kanal yang dilibatkan, jenis biller / produk, target nasabah retail atau corporate, dan fitur yang ditunda.</div>
+                </div>
+                <div class="card">
+                    <strong>4. Stakeholder Bisnis</strong>
+                    <div class="fill">Daftar unit bisnis, operasional, risiko, legal, TI, dan pihak eksternal yang terlibat.</div>
+                </div>
+                <div class="card">
+                    <strong>5. Business Success Metrics</strong>
+                    <div class="fill">Isi KPI target: jumlah mandate aktif, success rate debit, complaint rate, retry recovery rate, fee income, dan SLA operasional.</div>
+                </div>
+                <div class="card">
+                    <strong>6. Asumsi dan Constraint</strong>
+                    <div class="fill">Tuliskan constraint teknologi, core banking, regulasi, SLA vendor, budget, timeline, atau dependensi eksternal.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section span-4">
+            <div class="badge-row">
+                <span class="badge">Workshop Output</span>
+            </div>
+            <h2>Output Minimum dari Sesi BRD</h2>
+            <ul class="checklist">
+                <li>Use case prioritas dan ruang lingkup Minimum Viable Product (MVP) sudah disetujui.</li>
+                <li>Nasabah sasaran dan kanal sasaran sudah jelas.</li>
+                <li>Business owner dan approver requirement sudah jelas.</li>
+                <li>Daftar partner / biller prioritas sudah tersedia.</li>
+                <li>Risk appetite awal dan kontrol wajib sudah dipahami.</li>
+                <li>Daftar isu terbuka terdokumentasi.</li>
+            </ul>
+        </section>
+
+        <section class="section span-12">
+            <div class="badge-row">
+                <span class="badge">Business Rule Matrix</span>
+            </div>
+            <h2>Matriks Rule Bisnis</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Topik</th>
+                        <th>Pertanyaan Requirement</th>
+                        <th>Keputusan / Isian</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tipe Autodebet</td>
+                        <td>Apakah fixed amount, variable amount, minimum due, atau kombinasi?</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Frekuensi</td>
+                        <td>Bulanan, mingguan, harian, event-based, atau custom?</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Tanggal Eksekusi</td>
+                        <td>Bagaimana rule day-of-month, cutoff, end-of-month, dan holiday handling?</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Retry Policy</td>
+                        <td>Berapa kali retry, interval retry, dan kapan dinyatakan gagal final?</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Sumber Dana</td>
+                        <td>Satu rekening atau multi rekening? Ada fallback account atau tidak?</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Saldo dan Limit</td>
+                        <td>Apakah wajib full amount, boleh partial, ada saldo minimum tersisa, atau overdraft?</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Mandate Lifecycle</td>
+                        <td>Status apa saja yang digunakan untuk draft, active, suspend, cancel, expired?</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Fee</td>
+                        <td>Apakah ada fee? Jika ya, siapa yang dibebankan dan bagaimana rule posting fee?</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Notifikasi</td>
+                        <td>Kapan nasabah harus diberi notifikasi: pendaftaran, sukses, gagal, retry, cancel?</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section span-12" id="srd">
+            <div class="badge-row">
+                <span class="badge">SRD Section</span>
+                <span class="badge">System Requirement</span>
+            </div>
+            <h2>Bagian SRD Scope of Work</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Area</th>
+                        <th>Requirement yang Perlu Didefinisikan</th>
+                        <th>Isian Workshop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Arsitektur Solusi</td>
+                        <td>Target topology, boundary system, source of truth, deployment model, dan ownership komponen.</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Integrasi</td>
+                        <td>Daftar API, message queue, callback, file settlement, protocol, security mechanism, timeout, dan retry.</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Data Model</td>
+                        <td>Entity mandate, consent, execution, journal, notification, audit, reconciliation, dan archive.</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Security &amp; Access</td>
+                        <td>Authentication, authorization, maker-checker, encryption, masking, log retention, dan privilege control.</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Operational Requirement</td>
+                        <td>Monitoring dashboard, alerting, runbook, batch window, reconciliation process, dan support tooling.</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Non-Functional Requirement</td>
+                        <td>Availability, performance, scalability, idempotency, observability, HA/DR, capacity, dan backup.</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>Testing Requirement</td>
+                        <td>Unit, SIT, UAT, performance, failover, security, dan cutover validation.</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section span-6">
+            <div class="badge-row">
+                <span class="badge">Integration Checklist</span>
+            </div>
+            <h2>Checklist Integrasi Sistem</h2>
+            <ul class="checklist">
+                <li>Mobile Banking, Internet Banking dan/atau Channel Lainnya.</li>
+                <li>IAM / OTP / Device Binding / Authentication service.</li>
+                <li>Autodebet orchestration engine.</li>
+                <li>Core banking / CASA posting service.</li>
+                <li>Biller / partner inquiry dan callback interface.</li>
+                <li>Notification service.</li>
+                <li>Reconciliation / settlement process.</li>
+                <li>Fraud / risk monitoring tools.</li>
+                <li>Complaint handling / CS tools.</li>
+                <li>MIS / audit / logging repository.</li>
+            </ul>
+        </section>
+
+        <section class="section span-6">
+            <div class="badge-row">
+                <span class="badge">Exception Matrix</span>
+            </div>
+            <h2>Skenario Exception yang Harus Diputuskan</h2>
+            <ul class="checklist">
+                <li>Saldo tidak cukup.</li>
+                <li>Rekening dormant / restricted / blocked.</li>
+                <li>Duplicate mandate.</li>
+                <li>Duplicate execution.</li>
+                <li>Core banking timeout.</li>
+                <li>Biller timeout / callback gagal.</li>
+                <li>Success di core namun gagal di partner.</li>
+                <li>Reversal requirement.</li>
+                <li>Mismatch reconciliation.</li>
+                <li>Complaint nasabah dan evidence retrieval.</li>
+            </ul>
+        </section>
+
+        <section class="section span-12" id="workshop">
+            <div class="badge-row">
+                <span class="badge">Workshop Guide</span>
+                <span class="badge">Question Set</span>
+            </div>
+            <h2>Daftar Pertanyaan Workshop Requirement</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Pertanyaan</th>
+                        <th>Owner Jawaban</th>
+                        <th>Keputusan / Action Item</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Use case prioritas pertama apa dan mengapa?</td>
+                        <td>Divisi Digitalisasi dan Layanan</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Nasabah sasaran retail, bisnis, atau keduanya?</td>
+                        <td>Divisi Digitalisasi dan Layanan</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Siapa source of truth untuk mandate, execution, dan settlement?</td>
+                        <td>Divisi TI / Vendor Pengembang</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Bagaimana definisi consent yang sah dan bukti yang wajib disimpan?</td>
+                        <td>Divisi Digitalisasi dan Layanan / Divisi Manajemen Risiko</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Bagaimana rule retry, cutoff, holiday, fee, dan reversal?</td>
+                        <td>Divisi Operasional dan Akuntansi / Divisi TI</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Jika transaksi sukses di core namun callback gagal ke partner, status bisnis finalnya apa?</td>
+                        <td>Divisi Operasional dan Akuntansi / Vendor Pengembang</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Siapa yang memonitor, siapa yang melakukan manual repair, dan siapa yang menjawab complaint nasabah?</td>
+                        <td>Divisi Operasional dan Akuntansi / Bidang Pengaduan Nasabah</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Apakah vendor hanya membangun engine atau juga mengelola partner onboarding dan support integration?</td>
+                        <td>Divisi TI / Vendor Pengembang</td>
+                        <td><div class="fill">Isi hasil workshop</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section span-12" id="raci">
+            <div class="badge-row">
+                <span class="badge">RACI Draft</span>
+            </div>
+            <h2>Draft RACI untuk Validasi Workshop</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aktivitas</th>
+                        <th>Digitalisasi dan Layanan</th>
+                        <th>TI</th>
+                        <th>Vendor</th>
+                        <th>Operasional &amp; Akuntansi</th>
+                        <th>Bidang Pengaduan Nasabah</th>
+                        <th>Manajemen Risiko</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Menetapkan use case dan scope MVP</td>
+                        <td><span class="raci a">A</span> <span class="raci r">R</span></td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci i">I</span></td>
+                        <td><span class="raci c">C</span></td>
+                    </tr>
+                    <tr>
+                        <td>Desain arsitektur dan engine autodebet</td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci a">A</span></td>
+                        <td><span class="raci r">R</span></td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci i">I</span></td>
+                        <td><span class="raci c">C</span></td>
+                    </tr>
+                    <tr>
+                        <td>Partner onboarding dan integrasi</td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci a">A</span> <span class="raci r">R</span></td>
+                        <td><span class="raci i">I</span></td>
+                        <td><span class="raci i">I</span></td>
+                        <td><span class="raci c">C</span></td>
+                    </tr>
+                    <tr>
+                        <td>Operasional harian dan rekonsiliasi</td>
+                        <td><span class="raci i">I</span></td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci a">A</span> <span class="raci r">R</span></td>
+                        <td><span class="raci i">I</span></td>
+                        <td><span class="raci c">C</span></td>
+                    </tr>
+                    <tr>
+                        <td>Complaint handling</td>
+                        <td><span class="raci a">A</span></td>
+                        <td><span class="raci i">I</span></td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci r">R</span></td>
+                        <td><span class="raci i">I</span></td>
+                    </tr>
+                    <tr>
+                        <td>Fraud dan risk monitoring</td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci i">I</span></td>
+                        <td><span class="raci c">C</span></td>
+                        <td><span class="raci i">I</span></td>
+                        <td><span class="raci a">A</span> <span class="raci r">R</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section span-12" id="signoff">
+            <div class="badge-row">
+                <span class="badge">Approval</span>
+                <span class="badge">Sign-Off</span>
+            </div>
+            <h2>Sign-Off dan Open Issue Tracker</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <strong>Kolom Sign-Off</strong>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pihak</th>
+                                <th>Nama</th>
+                                <th>Jabatan</th>
+                                <th>Tanda Tangan / Approval</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Business Owner</td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td></tr>
+                            <tr><td>IT Owner</td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td></tr>
+                            <tr><td>Operations Owner</td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td></tr>
+                            <tr><td>Risk / Compliance</td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card">
+                    <strong>Open Issue Tracker</strong>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Issue</th>
+                                <th>Owner</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><div class="fill">Isi isu terbuka</div></td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td></tr>
+                            <tr><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td></tr>
+                            <tr><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td><td><div class="fill"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="footer">
+        <p>
+            Halaman ini disediakan untuk memastikan kejelasan dan keselarasan kebutuhan pengembangan sebagai dasar pengambilan keputusan strategis. Dengan adanya ringkasan requirement yang terstruktur, manajemen dapat melihat secara utuh arah implementasi, prioritas pengembangan, serta implikasi bisnis dan teknis yang akan dihasilkan dari inisiatif ini.
+        </p>
+    </section>
+</div>
+</body>
+</html>
