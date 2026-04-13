@@ -135,9 +135,9 @@ pre { margin: 0; padding: 16px; overflow-x: auto; border-radius: 14px; backgroun
     <nav style="background:#111; padding:10px;">
         <a href="index.html" style="color:white; margin-right:15px;">Home</a>
         <a href="dashboard.html" style="color:white; margin-right:15px;">Dashboard</a>
-        <a href="deck.html" style="color:white; margin-right:15px;">Deck</a>
-        <a href="swimlane.html" style="color:white; margin-right:15px;" class="active">Swimlane</a>
+        <a href="swimlane.html" style="color:white; margin-right:15px;" class="active">Diagram Sequence</a>
         <a href="brdsrd.html" style="color:white;">BRD & SRD</a>
+        <a href="deck.html" style="color:white; margin-right:15px;">Executive Summary</a>
     </nav>
 
 <div class="page">
@@ -146,7 +146,7 @@ pre { margin: 0; padding: 16px; overflow-x: auto; border-radius: 14px; backgroun
             <a href="#overview">Overview</a>
             <a href="#sequence-register">Sequence Registrasi</a>
             <a href="#sequence-execution">Sequence Eksekusi</a>
-            <a href="#swimlane">Swimlane</a>
+            <a href="#swimlane">Diagram Sequence</a>
             <a href="#notes">Catatan Teknis</a>
         </nav>
     </div>
@@ -155,12 +155,12 @@ pre { margin: 0; padding: 16px; overflow-x: auto; border-radius: 14px; backgroun
         <div class="eyebrow">Detailed Diagram Pack</div>
         <h1>Diagram Sequence dan Swimlane Detail untuk Fitur Autodebet</h1>
         <p>
-            File ini memisahkan fokus pada interaksi antar sistem dan tanggung jawab tiap lane proses. Diagram dibagi menjadi dua skenario utama: <strong>registrasi mandate</strong> dan <strong>eksekusi debit periodik</strong>, lalu diterjemahkan lagi ke dalam swimlane operasional yang menunjukkan siapa melakukan apa, kapan, dan dengan kontrol apa.
+            Halaman ini memisahkan fokus pada interaksi antar sistem dan tanggung jawab tiap lane proses. Diagram dibagi menjadi dua skenario utama: <strong>registrasi mandate</strong> dan <strong>eksekusi debit periodik</strong>, lalu diterjemahkan lagi ke dalam swimlane operasional yang menunjukkan siapa melakukan apa, kapan, dan dengan kontrol apa.
         </p>
         <div class="summary">
             <div class="card">
                 <strong>7 Partisipan</strong>
-                <span>Nasabah, Channel, IAM, Autodebet Service, Scheduler, Core Banking, dan Biller atau Notification.</span>
+                <span>Nasabah, Channel, Identity and Access Management (IAM), Autodebet Service, Scheduler, Core Banking, dan Biller atau Notification.</span>
             </div>
             <div class="card">
                 <strong>2 Sequence Utama</strong>
@@ -240,7 +240,7 @@ pre { margin: 0; padding: 16px; overflow-x: auto; border-radius: 14px; backgroun
                         </div>
                         <div class="step">
                             <div class="step-label">Step 10</div>
-                            <div class="msg system start-3">IAM memverifikasi challenge, menghasilkan auth result dan consent proof reference.</div>
+                            <div class="msg system start-3">IAM / OTP memverifikasi challenge, menghasilkan auth result dan consent proof reference.</div>
                         </div>
                         <div class="step">
                             <div class="step-label">Step 11</div>
@@ -386,7 +386,7 @@ pre { margin: 0; padding: 16px; overflow-x: auto; border-radius: 14px; backgroun
                         <div class="lane-title">Mobile / Internet Banking</div>
                         <div class="lane-track">
                             <div class="lane-cell"><strong>Capture input</strong>UI menampung biller, rekening, frekuensi, dan limit.</div>
-                            <div class="lane-cell"><strong>Strong auth</strong>Memicu challenge ke IAM.</div>
+                            <div class="lane-cell"><strong>Strong auth</strong>Memicu challenge ke Identity and Access Management (IAM).</div>
                             <div class="lane-cell"><strong>Submit inquiry</strong>Mengirim validasi ke Autodebet API.</div>
                             <div class="lane-cell"><strong>Create mandate</strong>Submit data final dengan idempotency key.</div>
                             <div class="lane-cell"><strong>History ready</strong>Menampilkan mandate aktif dan next schedule.</div>
@@ -397,7 +397,7 @@ pre { margin: 0; padding: 16px; overflow-x: auto; border-radius: 14px; backgroun
                     </div>
 
                     <div class="swim-row">
-                        <div class="lane-title">IAM / Fraud / Risk</div>
+                        <div class="lane-title">Identity and Access Management / Fraud / Risk</div>
                         <div class="lane-track">
                             <div class="lane-cell"><strong>Session check</strong>Memastikan channel session valid.</div>
                             <div class="lane-cell"><strong>OTP / device check</strong>Validasi faktor otentikasi dan device trust.</div>
@@ -480,7 +480,7 @@ pre { margin: 0; padding: 16px; overflow-x: auto; border-radius: 14px; backgroun
                 <li>Idempotency wajib hadir pada create mandate, execution trigger, callback partner, dan reversal.</li>
                 <li>Mandate versioning penting agar perubahan limit atau rekening sumber tidak merusak histori lama.</li>
                 <li>Callback failure ke biller tidak boleh otomatis dianggap gagal debit bila core posting sudah sukses.</li>
-                <li>Swimlane bisa dijadikan basis penyusunan SOP ops, RACI, BRD, dan sequence API yang lebih teknis.</li>
+                <li>Swimlane bisa dijadikan basis penyusunan SOP, RACI Matrix (Responsible, Accountable, Consulted and Informed), BRD, dan sequence API yang lebih teknis.</li>
             </ul>
         </section>
 

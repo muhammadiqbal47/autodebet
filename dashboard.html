@@ -76,8 +76,8 @@ a { color: inherit; }
     background: rgba(184, 92, 56, 0.12); color: var(--accent); font-size: 0.84rem; font-weight: 800;
     letter-spacing: 0.08em; text-transform: uppercase;
 }
-h1 { margin: 16px 0 14px; max-width: 860px; font-size: clamp(2.3rem, 5vw, 4.8rem); line-height: 1.02; }
-.hero p { max-width: 900px; margin: 0; color: var(--muted); font-size: 1.05rem; line-height: 1.8; }
+h1 { margin: 16px 0 14px; max-width: 100%; font-size: clamp(1.5rem, 4vw, 2.8rem); line-height: 1.02; text-align: justify; text-justify: inter-word;  }
+.hero p { max-width: 100%; margin: 0; color: var(--muted); font-size: 1.05rem; line-height: 1.8; text-align: justify; }
 .hero-grid { display: grid; grid-template-columns: 1.35fr 0.85fr; gap: 20px; margin-top: 26px; }
 .metrics,.hero-note,.panel,.table-card,.stack,.timeline-card,.api-card,.topology-card,.phase,.risk-card {
     border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--panel); box-shadow: var(--shadow);
@@ -85,11 +85,11 @@ h1 { margin: 16px 0 14px; max-width: 860px; font-size: clamp(2.3rem, 5vw, 4.8rem
 .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; padding: 16px; }
 .metric { padding: 16px; border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.62); border: 1px solid rgba(73, 93, 99, 0.08); }
 .metric strong { display: block; margin-bottom: 8px; color: var(--accent-2); font-size: 1.4rem; }
-.metric span { color: var(--muted); line-height: 1.55; font-size: 0.94rem; }
+.metric span { color: var(--muted); line-height: 1.55; font-size: 0.94rem; text-align: justify; display: block; }
 .hero-note { padding: 22px; background: linear-gradient(180deg, rgba(13, 110, 110, 0.08), rgba(255, 255, 255, 0.78)); }
 .hero-note h2,.panel h2,.table-card h2,.api-card h2,.topology-card h2 { margin: 0 0 12px; font-size: 1.35rem; }
 .hero-note p,.panel p,.panel li,.table-card p,.table-card li,.api-card p,.api-card li,.topology-card p,.topology-card li,td,th {
-    color: var(--muted); line-height: 1.7;
+    color: var(--muted); line-height: 1.7; text-align: justify;
 }
 .hero-note ul,.panel ul,.table-card ul,.api-card ul,.topology-card ul { margin: 0; padding-left: 20px; }
 .layout { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; margin-top: 20px; }
@@ -108,6 +108,7 @@ h1 { margin: 16px 0 14px; max-width: 860px; font-size: clamp(2.3rem, 5vw, 4.8rem
 .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .mini-card { padding: 16px; border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.62); border: 1px solid rgba(73, 93, 99, 0.08); }
 .mini-card strong { display: block; margin-bottom: 8px; color: var(--ink); }
+.mini-card p { text-align: justify; }
 .process-flow { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
 .phase { position: relative; padding: 16px; background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(245, 248, 246, 0.9)); }
 .phase::after {
@@ -116,12 +117,13 @@ h1 { margin: 16px 0 14px; max-width: 860px; font-size: clamp(2.3rem, 5vw, 4.8rem
 }
 .phase:last-child::after { display: none; }
 .phase strong { display: block; margin-bottom: 8px; color: var(--accent); }
-.phase span { color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
+.phase span { color: var(--muted); font-size: 0.92rem; line-height: 1.55; display: block; text-align: justify; }
 .topology { display: grid; grid-template-columns: 1.1fr 0.9fr 1.15fr; gap: 16px; align-items: stretch; margin-top: 18px; }
 .stack { padding: 18px; background: rgba(255, 255, 255, 0.68); border: 1px solid rgba(73, 93, 99, 0.08); border-radius: var(--radius-md); }
 .stack h3 { margin: 0 0 12px; font-size: 1.02rem; }
 .stack ul { margin: 0; padding-left: 18px; }
 .stack li + li { margin-top: 8px; }
+.stack li { text-align: justify; }
 .connector-column { display: grid; gap: 10px; align-content: center; }
 .connector {
     padding: 12px; border-radius: 14px; text-align: center; font-weight: 800; color: #fff;
@@ -143,9 +145,11 @@ pre {
     background: linear-gradient(180deg, var(--accent), var(--accent-3));
 }
 .timeline-card strong { display: block; margin-bottom: 10px; color: var(--accent); }
+.timeline-card p { text-align: justify; }
 .risk-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
 .risk-card { padding: 16px; background: rgba(255, 255, 255, 0.72); }
 .risk-card h3 { margin: 0 0 8px; font-size: 1rem; }
+.risk-card p { text-align: justify; }
 .pill {
     display: inline-flex; padding: 5px 10px; border-radius: 999px; font-size: 0.76rem; font-weight: 800;
     letter-spacing: 0.04em; text-transform: uppercase;
@@ -158,7 +162,7 @@ pre {
     background: linear-gradient(135deg, rgba(31, 42, 48, 0.96), rgba(13, 110, 110, 0.88));
     color: rgba(255, 255, 255, 0.88); box-shadow: var(--shadow);
 }
-.footer p { margin: 0; line-height: 1.8; }
+.footer p { margin: 0; line-height: 1.8; text-align: justify; }
 @media (max-width: 1100px) {
     .hero-grid,.topology,.grid-4,.timeline,.risk-grid { grid-template-columns: 1fr 1fr; }
     .process-flow { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -185,9 +189,9 @@ pre {
     <nav style="background:#111; padding:10px;">
         <a href="index.html" style="color:white; margin-right:15px;">Home</a>
         <a href="dashboard.html" style="color:white; margin-right:15px;" class="active">Dashboard</a>
-        <a href="deck.html" style="color:white; margin-right:15px;">Deck</a>
-        <a href="swimlane.html" style="color:white; margin-right:15px;">Swimlane</a>
+        <a href="swimlane.html" style="color:white; margin-right:15px;">Diagram Sequence</a>
         <a href="brdsrd.html" style="color:white;">BRD & SRD</a>
+        <a href="deck.html" style="color:white; margin-right:15px;">Executive Summary</a>
     </nav>
 
 <div class="page">
@@ -206,10 +210,10 @@ pre {
     </div>
 
     <section class="hero" id="ringkasan">
-        <div class="eyebrow">Autodebet Banking Architecture Pack</div>
+        <div class="eyebrow">Autodebet Banking Architecture</div>
         <h1>Fitur <span class="accent">Autodebet</span> untuk Mobile Banking, Internet Banking, dan Core Banking</h1>
         <p>
-            Dokumen ini dirancang sebagai presentasi dan dashboard implementasi end-to-end. Cakupannya meliputi definisi bisnis, alur proses registrasi hingga settlement, peran channel dan core banking, topologi solusi, kebutuhan pengembangan, spesifikasi API, kontrol keamanan, kebutuhan operasional, serta rekomendasi tahapan implementasi agar fitur autodebet dapat dibangun secara scalable, auditable, dan aman.
+            Halaman ini dirancang sebagai presentasi dan dashboard implementasi end-to-end. Cakupannya meliputi definisi bisnis, alur proses registrasi hingga settlement, peran channel dan core banking, topologi solusi, kebutuhan pengembangan, spesifikasi API, kontrol keamanan, kebutuhan operasional, serta rekomendasi tahapan implementasi agar fitur autodebet dapat dibangun secara scalable, auditable, dan aman.
         </p>
 
         <div class="hero-grid">
@@ -280,7 +284,7 @@ pre {
             <ul>
                 <li>Nasabah pemilik rekening sumber dana.</li>
                 <li>Channel aplikasi mobile banking atau internet banking.</li>
-                <li>Identity &amp; authentication service untuk login, OTP, device binding, dan biometrik.</li>
+                <li>Identity & authentication service untuk login, OTP, device binding, dan biometrik.</li>
                 <li>Autodebet orchestration service sebagai pusat business rule.</li>
                 <li>Biller, merchant, loan system, atau host tujuan penagihan.</li>
                 <li>Core banking dan general ledger untuk posting akuntansi.</li>
@@ -379,7 +383,7 @@ pre {
                         <td>Success/fail advice.</td>
                     </tr>
                     <tr>
-                        <td>Rekonsiliasi &amp; Settlement</td>
+                        <td>Rekonsiliasi & Settlement</td>
                         <td>Pencocokan transaksi dengan host eksternal, file settlement, dan suspense account.</td>
                         <td>Dual control, reconciliation batch, mismatch queue, automated alert.</td>
                         <td>Settled / pending / exception.</td>
@@ -405,7 +409,7 @@ pre {
             </p>
             <div class="topology">
                 <div class="stack">
-                    <h3>1. Channel &amp; Experience Layer</h3>
+                    <h3>1. Channel & Experience Layer</h3>
                     <ul>
                         <li>Mobile banking app.</li>
                         <li>Internet banking portal.</li>
@@ -416,7 +420,7 @@ pre {
                 <div class="connector-column">
                     <div class="connector">API Gateway</div>
                     <div class="connector alt">IAM / Consent / OTP</div>
-                    <div class="connector">Fraud &amp; Risk Engine</div>
+                    <div class="connector">Fraud & Risk Engine</div>
                 </div>
                 <div class="stack">
                     <h3>2. Business Orchestration Layer</h3>
@@ -424,14 +428,14 @@ pre {
                         <li>Autodebet mandate service.</li>
                         <li>Scheduler / job orchestrator.</li>
                         <li>Billing inquiry adapter.</li>
-                        <li>Retry &amp; exception workflow.</li>
+                        <li>Retry & exception workflow.</li>
                         <li>Reconciliation and reporting service.</li>
                     </ul>
                 </div>
             </div>
             <div class="topology" style="margin-top:14px;">
                 <div class="stack">
-                    <h3>3. Transaction &amp; Posting Layer</h3>
+                    <h3>3. Transaction & Posting Layer</h3>
                     <ul>
                         <li>Core banking deposit / CASA module.</li>
                         <li>Loan system / card system / internal product host.</li>
@@ -444,7 +448,7 @@ pre {
                     <div class="connector">Settlement File Exchange</div>
                 </div>
                 <div class="stack">
-                    <h3>4. External &amp; Control Layer</h3>
+                    <h3>4. External & Control Layer</h3>
                     <ul>
                         <li>Biller / merchant / aggregator.</li>
                         <li>Monitoring, SIEM, log analytics.</li>
@@ -462,7 +466,7 @@ pre {
             <h2>Kebutuhan Pengembangan Fungsional</h2>
             <ul>
                 <li>Registrasi mandate baru, termasuk fixed amount dan variable bill amount.</li>
-                <li>Consent management dengan syarat &amp; ketentuan yang terversioning.</li>
+                <li>Consent management dengan syarat & ketentuan yang terversioning.</li>
                 <li>Update mandate: nominal maksimum, tanggal debet, rekening sumber, suspend/resume, cancel.</li>
                 <li>Scheduler dengan calendar business day, holiday handling, cutoff time, dan retry rules.</li>
                 <li>Biller inquiry dan bill presentment untuk skenario amount variable.</li>
@@ -582,7 +586,7 @@ pre {
         </section>
 
         <section class="api-card span-6">
-            <h2>Header &amp; Konvensi API yang Direkomendasikan</h2>
+            <h2>Header & Konvensi API yang Direkomendasikan</h2>
             <ul>
                 <li><span class="mono">Authorization: Bearer &lt;token&gt;</span></li>
                 <li><span class="mono">X-Request-Id</span> untuk tracing end-to-end.</li>
@@ -669,7 +673,7 @@ pre {
         <section class="table-card span-12" id="data">
             <div class="badge-row">
                 <span class="badge">Data Model</span>
-                <span class="badge">Master &amp; Transaction</span>
+                <span class="badge">Master & Transaction</span>
             </div>
             <h2>Entitas Data Utama</h2>
             <table>
@@ -722,7 +726,7 @@ pre {
 
         <section class="panel span-12" id="security">
             <div class="badge-row">
-                <span class="badge">Security &amp; Compliance</span>
+                <span class="badge">Security & Compliance</span>
                 <span class="badge">Control Framework</span>
             </div>
             <h2>Kontrol Keamanan dan Kepatuhan yang Wajib Dipertimbangkan</h2>
@@ -777,7 +781,7 @@ pre {
                 </div>
                 <div class="risk-card">
                     <span class="pill good">Kontrol</span>
-                    <h3>Audit &amp; Pelaporan</h3>
+                    <h3>Audit & Pelaporan</h3>
                     <p>Seluruh perubahan mandate, eksekusi, reversal, dan settlement harus dapat ditelusuri.</p>
                     <p><strong>Implementasi:</strong> centralized logging, SIEM, report harian, dan evidence repository.</p>
                 </div>
@@ -846,7 +850,7 @@ pre {
             </div>
             <h2>Lingkungan dan Deployment yang Direkomendasikan</h2>
             <ul>
-                <li>Environment minimal: DEV, SIT, UAT, PERF, PROD, dan DR site.</li>
+                <li>Environment minimal: DEV, SIT, UAT, & PROD</li>
                 <li>Blue-green atau rolling deployment pada orchestration dan API gateway.</li>
                 <li>Scheduler state sebaiknya terpusat dan mendukung failover leadership.</li>
                 <li>Gunakan MQ atau event bus untuk memisahkan trigger debit dari posting sinkron.</li>
@@ -884,7 +888,7 @@ pre {
 
     <section class="footer">
         <p>
-            Kesimpulan: implementasi autodebet yang baik tidak hanya berupa fitur jadwal debit, tetapi sebuah kapabilitas end-to-end yang memadukan <strong>consent</strong>, <strong>orchestration</strong>, <strong>posting core banking</strong>, <strong>security</strong>, <strong>reconciliation</strong>, dan <strong>customer support traceability</strong>. Jika dibangun sebagai layanan terpisah dengan API yang jelas, fitur ini akan lebih mudah dikembangkan lintas channel, lebih aman diaudit, dan lebih siap diskalakan untuk kebutuhan retail maupun korporasi.
+            Implementasi autodebet yang baik tidak hanya berupa fitur jadwal debit, tetapi sebuah kapabilitas end-to-end yang memadukan <strong>consent</strong>, <strong>orchestration</strong>, <strong>posting core banking</strong>, <strong>security</strong>, <strong>reconciliation</strong>, dan <strong>customer support traceability</strong>. Jika dibangun sebagai layanan terpisah dengan API yang jelas, fitur ini akan lebih mudah dikembangkan lintas channel, lebih aman diaudit, dan lebih siap diskalakan untuk kebutuhan retail maupun korporasi.
         </p>
     </section>
 </div>

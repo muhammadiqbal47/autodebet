@@ -319,9 +319,9 @@ th {
     <nav style="background:#111; padding:10px;">
         <a href="index.html" style="color:white; margin-right:15px;">Home</a>
         <a href="dashboard.html" style="color:white; margin-right:15px;">Dashboard</a>
-        <a href="deck.html" style="color:white; margin-right:15px;">Deck</a>
-        <a href="swimlane.html" style="color:white; margin-right:15px;">Swimlane</a>
+        <a href="swimlane.html" style="color:white; margin-right:15px;">Diagram Sequence</a>
         <a href="brdsrd.html" style="color:white;">BRD & SRD</a>
+        <a href="deck.html" style="color:white; margin-right:15px;">Executive Summary</a>
     </nav>
 
 <div class="page">
@@ -334,24 +334,20 @@ th {
             <a href="#batasan">Batasan</a>
             <a href="#risiko">Risiko</a>
             <a href="#waktu">Waktu</a>
-            <a href="#referensi">HTML Lainnya</a>
+            <a href="#referensi">Halaman Pendukung</a>
         </nav>
     </div>
 
     <section class="hero">
-        <div class="eyebrow">Main Project Index</div>
-        <h1>Dokumentasi Proyek Pengembangan Fitur Autodebet Bank Aceh Syariah</h1>
+        <div class="eyebrow">Main Project</div>
+        <h1>Pengembangan Fitur Autodebet Bank Aceh Syariah</h1>
         <p>
-            Halaman ini menjadi pintu masuk utama dokumentasi proyek untuk repository GitHub. Di dalamnya terdapat ringkasan proyek, area requirement utama, asumsi, batasan, risiko, rencana waktu pelaksanaan, serta tautan ke dokumen HTML pendukung yang telah disusun terpisah.
+            Halaman ini merepresentasikan kerangka strategis pengembangan kapabilitas autodebet sebagai bagian dari transformasi layanan digital bank. Fokus utama mencakup pembangunan engine autodebet yang scalable dan terintegrasi, serta penguatan fitur pada channel seperti mobile banking, internet banking dan core banking back-end untuk mendukung pengalaman nasabah yang seamless dan aman
         </p>
         <div class="hero-grid">
             <div class="hero-card">
                 <strong>Tujuan Halaman</strong>
                 <p>Menyediakan satu halaman induk yang memudahkan pembaca memahami konteks proyek dan menavigasi seluruh artefak dokumentasi autodebet.</p>
-            </div>
-            <div class="hero-card">
-                <strong>Artefak yang Tersedia</strong>
-                <p>`brdsrd.html`, `dashboard.html`, `deck.html`, dan `swimlane.html`.</p>
             </div>
         </div>
     </section>
@@ -411,11 +407,11 @@ th {
                     <p>Ringkasan menyeluruh fitur autodebet: flow, topologi, API, data model, keamanan, dan roadmap.</p>
                 </a>
                 <a class="link-card" href="deck.html">
-                    <strong>Executive Deck</strong>
+                    <strong>Executive Summary</strong>
                     <p>Versi formal untuk presentasi direksi atau steering committee.</p>
                 </a>
                 <a class="link-card" href="swimlane.html">
-                    <strong>Sequence / Swimlane</strong>
+                    <strong>Diagram Sequence</strong>
                     <p>Diagram interaksi detail registrasi mandate, eksekusi debit, dan tanggung jawab operasional.</p>
                 </a>
             </div>
@@ -482,7 +478,7 @@ th {
                 <li>Dokumentasi ini belum menetapkan keputusan final atas seluruh rule bisnis detail.</li>
                 <li>Lingkup partner, jenis biller, dan model settlement masih perlu diputuskan pada workshop requirement.</li>
                 <li>Implementasi awal dapat dibatasi pada use case prioritas sebelum ekspansi ke semua produk.</li>
-                <li>Dependensi terhadap core banking, IAM, dan partner eksternal dapat mempengaruhi jadwal proyek.</li>
+                <li>Dependensi terhadap core banking, Identity and Access Management, dan partner eksternal dapat mempengaruhi jadwal proyek.</li>
             </ul>
         </section>
 
@@ -532,7 +528,7 @@ th {
             <div class="timeline">
                 <div class="card">
                     <h3>Fase 1: Inisiasi</h3>
-                    <p>Kickoff, alignment stakeholder, pengumpulan requirement awal, dan penyusunan scope workshop.</p>
+                    <p>Kickoff, alignment stakeholder, pengumpulan requirement awal, dan penyusunan scope of work.</p>
                 </div>
                 <div class="card">
                     <h3>Fase 2: Requirement &amp; Design</h3>
@@ -540,11 +536,11 @@ th {
                 </div>
                 <div class="card">
                     <h3>Fase 3: Development &amp; Testing</h3>
-                    <p>Pembangunan engine, integrasi kanal, SIT, UAT, performance test, dan operational readiness.</p>
+                    <p>Pembangunan engine, integrasi kanal, SIT, UAT, TO, performance test, dan operational readiness.</p>
                 </div>
                 <div class="card">
                     <h3>Fase 4: Deployment</h3>
-                    <p>Cutover, go-live bertahap, hypercare, monitoring intensif, dan evaluasi pasca implementasi.</p>
+                    <p>Migration, go-live bertahap, monitoring intensif, dan evaluasi pasca implementasi.</p>
                 </div>
             </div>
         </section>
@@ -552,25 +548,24 @@ th {
         <section class="section span-12" id="referensi">
             <div class="badge-row">
                 <span class="badge">Menu Dokumen</span>
-                <span class="badge">HTML Navigation</span>
             </div>
-            <h2>Daftar Halaman HTML Pendukung</h2>
+            <h2>Daftar Halaman Pendukung</h2>
             <div class="grid-4">
-                <a class="link-card" href="brdsrd.html">
-                    <strong>brdsrd.html</strong>
-                    <p>Template requirement workshop gabungan BRD/SRD.</p>
-                </a>
                 <a class="link-card" href="dashboard.html">
-                    <strong>dashboard.html</strong>
+                    <strong>Dashboard</strong>
                     <p>Dashboard utama konsep, arsitektur, API, dan flow autodebet.</p>
                 </a>
-                <a class="link-card" href="deck.html">
-                    <strong>deck.html</strong>
-                    <p>Deck formal untuk direksi / steering committee.</p>
-                </a>
                 <a class="link-card" href="swimlane.html">
-                    <strong>swimlane.html</strong>
+                    <strong>Diagram Sequence</strong>
                     <p>Sequence diagram dan swimlane detail proses autodebet.</p>
+                </a>
+                <a class="link-card" href="brdsrd.html">
+                    <strong>BRD & SRD</strong>
+                    <p>Template requirement workshop gabungan BRD/SRD.</p>
+                </a>
+                <a class="link-card" href="deck.html">
+                    <strong>Executive Summary</strong>
+                    <p>Deck formal untuk direksi / steering committee.</p>
                 </a>
             </div>
         </section>
@@ -578,7 +573,7 @@ th {
 
     <section class="footer">
         <p>
-            Halaman index ini dirancang sebagai pintu masuk utama dokumentasi proyek. Untuk penggunaan di GitHub, file ini dapat dijadikan `index.html` pada root repository agar pembaca langsung memperoleh gambaran proyek sekaligus akses ke seluruh dokumen pendukung.
+            Halaman ini disusun sebagai titik awal untuk memberikan pemahaman menyeluruh mengenai arah dan urgensi pengembangan kapabilitas autodebet. Kehadirannya menegaskan bahwa kebutuhan akan mekanisme pembayaran otomatis yang andal, aman, dan terintegrasi bukan lagi sekadar fitur tambahan, melainkan bagian penting dari fondasi layanan perbankan modern.
         </p>
     </section>
 </div>
